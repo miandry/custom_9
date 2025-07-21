@@ -189,16 +189,11 @@ class PaymentController extends ControllerBase {
     
     $service_helper = \Drupal::service('drupal.helper');
     $params = $service_helper->helper->get_parameter();
-    if($params['action']=='cancel' && isset($params['booking_new'])){
-        $path_root = '/booking-process';
-        $path = $path_root.'?booking_back='.$params['booking_new'];
-    }else{
-        $uid = \Drupal::currentUser()->id();
-        $path_root = '/user'.'/'.$uid;
-        $path = $path_root.'?action=failed';
-    
-    }
-    
+ 
+    $uid = \Drupal::currentUser()->id();
+    $path_root = '/user'.'/'.$uid;
+    $path = $path_root.'?action=failed';
+      
     $response = new RedirectResponse($path, 302);
     $response->send();
     return;
