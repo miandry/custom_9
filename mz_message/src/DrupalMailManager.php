@@ -63,7 +63,7 @@ class DrupalMailManager
                 \Drupal::logger('mz_message')->error( $message);
             } else {
                 \Drupal::logger('mz_message')->info('Message has been sent');
-                \Drupal::messenger()->addMessage('Email Message has been sent');  
+                //\Drupal::messenger()->addMessage('Email Message has been sent');  
             } 
  
         } else {
