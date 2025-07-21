@@ -1,0 +1,8 @@
+name: 'mz_booking'
+type: module
+description: 'Booking Integration'
+core_version_requirement: ^8.8 || ^9
+package: 'Custom'
+dependencies:
+    - entity_parser
+    - drupal_helper

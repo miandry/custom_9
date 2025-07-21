@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @file
+ * Contains mz_layout.module.
+ */
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
+/**
+ * Implements hook_help().
+ */
+function mz_layout_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the mz_layout module.
+    case 'help.page.mz_layout':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Layout Builder Improvement') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+function mz_layout_theme($existing, $type, $theme, $path) {
+    $theme=array();
+    $theme['menu_local_tasks_primary'] = array(
+        'variables' => array(
+            'primary' => array(),
+        )
+    );
+    $theme['form_builder_layout_custom'] = array(
+        'render element' => 'form'
+    );
+    return $theme;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
+ *
+ * Use preprocess hook to set #attached to child elements
+ * because they will be processed by Twig and drupal_render will
+ * be invoked.
+ */
+function mz_layout_preprocess_menu_local_tasks(&$variables) {
+    $helper = \Drupal::service('drupal.helper')->helper;
+    $route_name = $helper->get_route_name_by_url_current() ;
+    $route = \Drupal::routeMatch()->getRouteObject();
+    $is_admin =  \Drupal::service('router.admin_context')->isAdminRoute($route);
+    $theme = \Drupal::theme()->getActiveTheme();
+    $config = \Drupal::config('system.theme');
+    $default_theme =  $config->get('default');
+    $current_theme =  $theme->getName();
+   // if($default_theme == $current_theme){
+        if(!$is_admin && $route_name != "layout_builder.overrides.node.view"){
+            $html = [
+                '#theme' => 'menu_local_tasks_primary',
+                '#primary' => $variables['primary']
+            ];
+            $variables['primary'] = \Drupal::service('renderer')->render($html);
+            $variables['#attached']['library'][] = 'mz_layout/mz_layout';
+        }
+        if(!$is_admin && $route_name == "layout_builder.overrides.node.view"){
+            $variables['primary'] = "" ;
+        }
+  //  }
+
+}
+// function mz_layout_preprocess_container(&$variables) {
+//     //something like this
+//     $variables['elements']['#prefix'] = '<div class="container-ground">';
+//     $variables['elements']['#suffix'] = '</div>';
+//   }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function mz_layout_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    if ($form['#form_id'] === 'layout_builder_add_block' || $form['#form_id'] === 'layout_builder_update_block') {
+        
+        $form['settings']['label']['#default_value'] =  $form['settings']['admin_label']['#plain_text'] ;
+        $form['settings']['label_display']['#default_value'] = false ;
+    }
+   if($form_id =='node_landing_page_layout_builder_form'){
+    $theme = \Drupal::theme()->getActiveTheme();
+    $config = \Drupal::config('system.theme');
+    $default_theme =  $config->get('default');
+    $current_theme =  $theme->getName();
+      //  if($default_theme == $current_theme){
+            $route = \Drupal::routeMatch()->getRouteObject();
+            $is_admin =  \Drupal::service('router.admin_context')->isAdminRoute($route);
+            $status = \Drupal::service('drupal.helper')->helper->str_ends_with($form_id, '_layout_builder_form');
+            if (!$is_admin && $status) {
+                $form['#theme'] = 'form_builder_layout_custom';
+                $form['#attached']['library'][] = 'mz_layout/mz_layout';
+                $form['actions']['submit'][ "#value"] = "Save your page";
+            }
+      //  }
+    }
+
+    if($form_id =='node_landing_page_form'){
+        $entity = $form_state->getFormObject()->getEntity();
+        $form['info']['widget'][0]['value']['#default_value'] =  strtoupper($entity->bundle())  ;
+        $form['actions']['submit']['#submit'][] = '__mz_layout_redirect_submit';
+    }
+}
+
+
+ function __mz_layout_redirect_submit(&$form, FormStateInterface $form_state) {
+      $entity = $form_state->getFormObject()->getEntity();
+      $redirect_path = "/node/".$entity->id()."/layout";
+      $url = url::fromUserInput($redirect_path);
+      // set redirect
+      $form_state->setRedirectUrl($url);
+  }

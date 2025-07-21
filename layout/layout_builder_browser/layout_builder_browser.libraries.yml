@@ -1,0 +1,24 @@
+browser:
+  version: VERSION
+  css:
+    theme:
+      css/layout_builder_browser.css: {}
+modal:
+  version: VERSION
+  js:
+    js/layout_builder_browser.modal.js: { }
+  dependencies:
+    - core/jquery
+    - core/jquery.ui.dialog
+    - layout_builder/drupal.layout_builder
+admin:
+  version: VERSION
+  css:
+    theme:
+      css/layout_builder_browser.admin.css: {}
+      
+layout_builder_browser_tabs:
+  version: VERSION
+  header: true
+  js:
+    js/layout_builder_browser.tabs.js: { }

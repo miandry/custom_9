@@ -1,0 +1,7 @@
+name: 'mz_message_mobile'
+type: module
+description: 'mz_message_mobile Integration with twilio'
+core_version_requirement: ^8.8 || ^9
+package: 'Custom'
+dependencies:
+  - twilio

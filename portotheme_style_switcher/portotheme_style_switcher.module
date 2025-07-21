@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Contains print_html.module.
+ */
+function portotheme_style_switcher_theme()
+{
+    return array(
+        'portotheme_style_switcher' => array(
+            'variables' => array(
+                'item' => array()
+            )
+        )
+    );
+}
+

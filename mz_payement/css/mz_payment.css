@@ -1,0 +1,122 @@
+#stripe-hold {
+    font-family: "Helvetica Neue", Helvetica;
+    font-size: 15px;
+    font-variant: normal;
+    padding: 0;
+    margin: 0;
+}
+
+form#stripe-hold {
+    max-width: 480px;
+    margin: auto;
+}
+
+#stripe-hold .group {
+    background: white;
+    box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.10), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+#stripe-hold label {
+    position: relative;
+    color: #8898AA;
+    font-weight: 300;
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    flex-direction: row;
+}
+
+#stripe-hold .group label:not(:last-child) {
+    border-bottom: 1px solid #F0F5FA;
+}
+
+#stripe-hold label>span {
+    text-align: right;
+    margin-right: 30px;
+}
+
+#stripe-hold #amount {
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#stripe-hold .field {
+    background: transparent;
+    font-weight: 300;
+    border: 0;
+    color: #31325F;
+    outline: none;
+    flex: 1;
+    padding-right: 10px;
+    padding-left: 10px;
+    cursor: text;
+}
+
+#stripe-hold .field::-webkit-input-placeholder {
+    color: #CFD7E0;
+}
+
+#stripe-hold .field::-moz-placeholder {
+    color: #CFD7E0;
+}
+
+#stripe-hold button {
+    float: left;
+    display: block;
+    color: white!important;
+    box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.10), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    border: 0;
+    margin-top: 0px;
+    font-size: 15px;
+    font-weight: 400;
+    width: 100%;
+    height: 40px;
+    line-height: 38px;
+    outline: none;
+    background: #555ABF;
+}
+
+#stripe-hold button:focus {
+    background: #555ABF;
+}
+
+#stripe-hold button:active {
+    background: #43458B;
+}
+
+#stripe-hold .outcome {
+    float: left;
+    width: 100%;
+    padding-top: 8px;
+    min-height: 24px;
+    text-align: center;
+}
+
+#stripe-hold .success,
+#stripe-hold .error {
+    display: none;
+    font-size: 13px;
+}
+
+#stripe-hold .success.visible,
+#stripe-hold .error.visible {
+    display: inline;
+}
+
+#stripe-hold .error {
+    color: #E4584C;
+}
+
+#stripe-hold .success {
+    color: #666EE8;
+}
+
+#stripe-hold .success .token {
+    font-weight: 500;
+    font-size: 13px;
+}

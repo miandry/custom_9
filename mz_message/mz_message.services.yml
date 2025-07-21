@@ -1,0 +1,10 @@
+services:
+  logger.channel.mz_message:
+    parent: logger.channel_base
+    arguments: ['mz_message']
+  mz_message.default:
+    class: Drupal\mz_message\MessageService
+    arguments: []
+  mz_message.mail:
+    class: Drupal\mz_message\DrupalMailManager
+    arguments: []

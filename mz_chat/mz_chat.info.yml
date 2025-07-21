@@ -1,0 +1,5 @@
+name: 'mz_chat'
+type: module
+description: 'Chat Integration'
+core_version_requirement: ^8.8 || ^9
+package: 'Custom'

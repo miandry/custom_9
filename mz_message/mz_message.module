@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Contains mz_message.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_help().
+ */
+function mz_message_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the mz_message module.
+    case 'help.page.mz_message':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Message notification manage') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+/**
+ * Implements hook_tokens_alter().
+ */
+function mz_message_tokens_alter(array &$replacements, array $context, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata) {
+  // Check if the tokens from the node are being altered.
+  if ($context['type'] == 'node' && !empty($context['data']['node'])) {
+    $node = $context['data']['node'];
+
+    // Check for the date_range field.
+    if ($node->hasField('field_dates') && !$node->get('field_dates')->isEmpty()) {
+      $start_date = $node->field_dates->value;
+      $end_date = $node->field_dates->end_value;
+
+      // Modify the format as needed.
+      if (isset($replacements['[node:field_dates]'])) {  // Ensure the token key matches the actual token.
+        $formatted_start_date = $start_date;
+        $formatted_end_date = $end_date;
+        $replacements['[node:field_dates]'] = $formatted_start_date . ' to ' . $formatted_end_date;
+      }
+    }
+  }
+}
+
+
+
+/*
+ * Implements hook_node_insert().
+ */
+function mz_message_node_insert($node) {
+        \Drupal::service('mz_message.default')->manageMessage('insert_node',$node);     
+}
+
+/*
+ * Implements hook_node_update().
+ */
+function mz_message_node_update($node) {
+    
+    \Drupal::service('mz_message.default')->manageMessage('update_node',$node);  
+
+
+    // if($entity->moderation_state && $entity->bundle() == 'booking'){
+    //   $cuurent_state = ($entity->moderation_state->value);
+    //   $cuurent_old = ($entity->original && $entity->original->moderation_state)?($entity->original->moderation_state->value) : '';
+    //   $status_message = ($cuurent_old ." to ".$cuurent_state);
+    //   \Drupal::messenger()->addMessage( $status_message);  
+    //   $username = '';
+    //   $uid = $entity->getOwnerId();
+    //   $user = \Drupal\user\Entity\User::load($uid);
+    //   if (!is_null($user)) {
+    //     $username = $user->getDisplayName();
+    //   }
+    //   $userCurrent = \Drupal::currentUser();
+  
+    //   $message = "Init booking" ;
+    //   if($status_message == "draft to draft"){
+    //     $message = $username.' request booking ' ;     
+    //   }
+    //   //validation
+    //   if($status_message == "draft to validate"){
+    //     $message = 'Booking of '.$username.' was validated by '.$userCurrent->getAccountName();
+    //   }
+  
+    //   //refund ok
+    //   if($status_message=="validate to published"){
+    //     $message = 'Refund deposit of '.$username.' was submitted by '.$userCurrent->getAccountName();
+    //   }
+    //   $entity->setRevisionLogMessage($message);
+    //   \Drupal::service('mz_message.default')->processMessage('update_node',$entity);
+  
+    // }
+}
+/*
+ * Implements hook_node_update().
+ */
+function mz_message_node_delete($node) {
+     \Drupal::service('mz_message.default')->manageMessage('delete_node',$node);  
+}
+

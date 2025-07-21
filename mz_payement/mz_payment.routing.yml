@@ -1,0 +1,69 @@
+mz_payment.settings:
+   path: '/admin/config/payments'
+   defaults:
+     _form: '\Drupal\mz_payment\Form\SettingsPayment'
+     _title: 'Settings payments'
+   requirements:
+     _permission: 'settings payments'
+mz_payment.refund:
+   path: '/admin/payment/refund'
+   defaults:
+     _form: '\Drupal\mz_payment\Form\RefundForm'
+     _title: 'Refund Payment'
+   requirements:
+     _permission: 'refund payments'
+mz_payment.checkout:
+  path: '/payment/checkout'
+  defaults:
+    _controller: '\Drupal\mz_payment\Controller\PaymentController::checkout'
+    _title: 'checkout'
+  requirements:
+    _permission: 'access content'     
+
+mz_payment.webhook:
+  path: '/stripe/webhook'
+  defaults:
+    _controller: '\Drupal\mz_payment\Controller\PaymentController::webhook'
+    _title: 'Web hook stripe'
+  requirements:
+    _permission: 'access content'         
+mz_payment.success:
+  path: '/stripe/success'
+  defaults:
+    _controller: '\Drupal\mz_payment\Controller\PaymentController::success'
+    _title: 'Success Payment'
+  requirements:
+    _permission: 'access content'  
+
+mz_payment.failed:
+  path: '/stripe/failed'
+  defaults:
+    _controller: '\Drupal\mz_payment\Controller\PaymentController::failed'
+    _title: 'Failed Payment'
+  requirements:
+    _permission: 'access content'      
+
+mz_payment.unSubscription:
+  path: '/payment/unSubscription/{id}'
+  defaults:
+    _controller: '\Drupal\mz_payment\Controller\PaymentController::unSubscription'
+    _title: 'checkout'
+  requirements:
+    _permission: 'access content'  
+
+mz_payment.checkoutstaydirect:
+  path: '/payment/checkoutstaydirect'
+  defaults:
+    _controller: '\Drupal\mz_payment\Controller\PaymentController::checkoutstaydirect'
+    _title: 'checkout'
+  requirements:
+    _permission: 'access content'   
+
+mz_payment.parent_action:
+  path: '/parent-action'
+  defaults:
+    _controller: '\Drupal\mz_payment\Controller\PaymentController::parent_action'
+    _title: 'parent action'
+  requirements:
+    _permission: 'access content'        
+ 

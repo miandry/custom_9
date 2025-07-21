@@ -1,0 +1,7 @@
+name: 'mz_payment'
+type: module
+description: 'Payment Strip Integration'
+core_version_requirement: ^8.8 || ^9
+package: 'Custom'
+dependencies:
+  - stripe

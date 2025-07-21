@@ -1,0 +1,7 @@
+mz_chat.settings:
+   path: '/admin/chat'
+   defaults:
+     _form: '\Drupal\mz_chat\Form\ChatIntegration'
+     _title: 'Chat Integration'
+   requirements:
+     _permission: 'manage chat'

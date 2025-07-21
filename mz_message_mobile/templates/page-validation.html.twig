@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phone Verification Form</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Phone Verification</h2>
+    <form id="verification-form">
+        <div class="form-group">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone number" required>
+        </div>
+        <button type="button" id="sendCodeBtn" class="btn btn-primary">Send Verification Code</button>
+
+        <div class="form-group mt-3">
+            <label for="code">Verification Code:</label>
+            <input type="text" class="form-control" id="code" name="code" placeholder="Enter verification code" required>
+        </div>
+        <button type="submit" class="btn btn-success">Verify Code</button>
+    </form>
+    <div id="message"></div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#sendCodeBtn').click(function() {
+        var phone = $('#phone').val();
+        if (phone) {
+            $.ajax({
+                url: '/path/to/send_code.php', // Update with path to your PHP script
+                type: 'POST',
+                data: {phone: phone},
+                success: function(data) {
+                    $('#message').html('<div class="alert alert-success">Code sent successfully.</div>');
+                },
+                error: function() {
+                    $('#message').html('<div class="alert alert-danger">Failed to send code.</div>');
+                }
+            });
+        } else {
+            $('#message').html('<div class="alert alert-danger">Please enter a valid phone number.</div>');
+        }
+    });
+
+    $('#verification-form').submit(function(e) {
+        e.preventDefault();
+        var phone = $('#phone').val();
+        var code = $('#code').val();
+        if (code) {
+            $.ajax({
+                url: '/path/to/verify_code.php', // Update with path to your PHP script
+                type: 'POST',
+                data: {
+                    phone: phone,
+                    code: code
+                },
+                success: function(data) {
+                    $('#message').html('<div class="alert alert-success">Phone verified successfully.</div>');
+                },
+                error: function() {
+                    $('#message').html('<div class="alert alert-danger">Invalid verification code.</div>');
+                }
+            });
+        } else {
+            $('#message').html('<div class="alert alert-danger">Please enter the verification code.</div>');
+        }
+    });
+});
+
+</script>
+
+</body>
+</html>

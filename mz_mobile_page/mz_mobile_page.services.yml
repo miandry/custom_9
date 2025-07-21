@@ -1,0 +1,8 @@
+services:
+  mymodule.event_subscriber:
+    class: Drupal\mz_mobile_page\EventSubscriber\MobilePageEventSubscriber
+    tags:
+      - { name: event_subscriber }
+  mz_mobile_page.render:
+    class: Drupal\mz_mobile_page\RenderJSONManager
+    arguments: []

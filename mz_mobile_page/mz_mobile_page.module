@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Contains mz_mobile_page.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Render\Markup;
+use Symfony\Component\HttpFoundation\JsonResponse;
+/**
+ * Implements hook_help().
+ */
+function mz_mobile_page_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the mz_mobile_page module.
+    case 'help.page.mz_mobile_page':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('mz_mobile_page Integration') . '</p>';
+      return $output;
+
+    default:
+  }
+}

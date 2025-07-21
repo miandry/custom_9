@@ -1,0 +1,8 @@
+services:
+  mz_base.init:
+    class: Drupal\mz_base\InitService
+    arguments: []
+  mz_base.default:
+    class: Drupal\mz_base\DefaultService
+    arguments: []
+

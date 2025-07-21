@@ -1,0 +1,8 @@
+
+mz_message.message_controller_insert:
+  path: '/api/message/insert'
+  defaults:
+    _controller: '\Drupal\mz_message\Controller\MessageController::insert'
+    _title: 'insert'
+  requirements:
+    _permission: 'access content'

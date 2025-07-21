@@ -1,0 +1,109 @@
+<?php
+
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+function layout_builder_browser_link_alter(&$variables) {
+
+  if(!\Drupal::config('layout_builder_browser.settings')->get('use_modal')) {
+    return;
+  }
+  /** @var Drupal\Core\Url $url */
+  $url = $variables['url'];
+
+  if (!$url->isRouted()) {
+    return;
+  }
+
+  $route_name = $url->getRouteName();
+
+  if (!in_array($route_name, [
+    'layout_builder.choose_block',
+    'layout_builder.add_block',
+  ])) {
+    return;
+  }
+
+  if (in_array('use-ajax', $variables['options']['attributes']['class'])) {
+    $data_dialog_options = Json::encode([
+      'width' => "80%",
+      'height' => "auto",
+      'target' => 'layout-builder-modal',
+      'autoResize' => TRUE,
+      'modal' => TRUE,
+    ]);
+    $variables['options']['attributes']['data-dialog-options'] = $data_dialog_options;
+    $variables['options']['attributes']['data-dialog-type'] = 'dialog';
+    unset($variables['options']['attributes']['data-dialog-renderer']);
+  }
+}
+/**
+ * Implements hook_theme().
+ * 
+ * Register a module or theme's theme implementations.
+ * The implementations declared by this hook specify how a particular render array is to be rendered as HTML.
+ * 
+ * See: https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_theme/8.2.x
+ * 
+ * If you change this method, clear theme registry and routing table 'drush cc theme-registry' and 'drush cc router'.
+ */
+function layout_builder_browser_theme() {
+
+  return [
+    'layout_builder_browser' => [
+      'variables' => [
+         'block_categories' => [],
+         'filter'=>[]
+      ]
+    ],
+    'layout_builder_browser_item' => [
+      'variables' => [
+         'image' => null,
+         'link'=>  null,
+         'label'=>  null
+      ]
+    ]
+  ];
+
+}
+/**
+ * Implements hook_page_attachments()
+ */
+function  layout_builder_browser_page_attachments(array &$attachments) {
+  // Attach the modules styling to the module.
+  $attachments['#attached']['library'][] = 'layout_builder_browser/browser';
+  $attachments['#attached']['library'][] = 'layout_builder_browser/modal';
+  $attachments['#attached']['library'][] = 'layout_builder_browser/layout_builder_browser_tabs';
+}
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function  layout_builder_browser_entity_base_field_info(EntityTypeInterface $entity_type) {
+ if ($entity_type->id() === 'layout_builder_browser_block') {
+  $fields['media_image'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Media image'))
+      ->setDescription(t('The user ID of author of the Deployment entity entity.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'image')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'author',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 5,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+      return $fields;
+ }
+}

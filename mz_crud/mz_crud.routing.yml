@@ -1,0 +1,33 @@
+mz_crud.save:
+  path: '/crud/save'
+  defaults:
+    _controller: '\Drupal\mz_crud\Controller\ApiController::save'
+    _title: 'crud insert'
+  requirements:
+    _permission: 'access content'
+
+mz_crud.register:
+  path: '/crud/register'
+  defaults:
+    _controller: '\Drupal\mz_crud\Controller\ApiController::register'
+    _title: 'crud insert'
+  requirements:
+    _permission: 'access content'    
+
+mz_crud.login:
+  path: '/crud/login'
+  defaults:
+    _controller: '\Drupal\mz_crud\Controller\ApiController::login'
+    _title: 'crud insert'
+  requirements:
+    _permission: 'access content'       
+
+mz_crud.user_edit:
+  path: '/crud/user_edit'
+  defaults:
+    _controller: '\Drupal\mz_crud\Controller\ApiController::user_edit'
+    _title: 'crud insert'
+  requirements:
+    _permission: 'access content'
+    
+       

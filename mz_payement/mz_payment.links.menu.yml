@@ -1,0 +1,7 @@
+mz_payment.form_settings:
+  title: 'Settings payments'
+  route_name: mz_payment.settings
+  description: 'Set currency and another payment config'
+  parent: system.admin_config_system
+  weight: 99
+

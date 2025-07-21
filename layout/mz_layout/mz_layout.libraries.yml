@@ -1,0 +1,5 @@
+mz_layout :
+  version: VERSION
+  css:
+    component:
+      css/mz_layout.css : {}

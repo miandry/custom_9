@@ -1,0 +1,29 @@
+table {
+    margin: 15px;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+    padding: 5px!important;
+    border: 1px solid!important;
+    border-width: 0.5px !important;
+}
+
+th {
+    text-transform: uppercase!important;
+}
+
+#block-platform-theme-content .button {
+    border: 1px solid;
+    padding: 5px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+#block-platform-theme-content {
+    margin: 25px;
+}

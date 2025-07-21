@@ -1,0 +1,12 @@
+services:
+  html_page.manager:
+    class: Drupal\html_page\HtmlPageService
+  html_page.subscriber:
+    class: Drupal\html_page\EventSubscriber\HtmlOverrideSubscriber
+    tags:
+      - { name: event_subscriber }  
+  html_page.twig.extension:
+    class: Drupal\html_page\TwigExtension\DefaultTwigExtension
+    arguments: []
+    tags:
+      - { name: twig.extension }

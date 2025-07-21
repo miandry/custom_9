@@ -1,0 +1,24 @@
+mz_mobile_page.content.api_json:
+  path: '/api/v1/{entitype}/{bundle}'
+  defaults:
+    _langcode: 'en'
+    _controller: '\Drupal\mz_mobile_page\Controller\DefaultController::apiListJson'
+  requirements:
+    _custom_access: '\Drupal\mz_mobile_page\Controller\DefaultController::apiJsonAccess'
+
+mz_mobile_page.details.api_json:
+  path: '/api/v1/{entitype}/{bundle}/{id}'
+  defaults:
+    _langcode: 'en'
+    _controller: '\Drupal\mz_mobile_page\Controller\DefaultController::apiDetailsJson'
+  requirements:
+    _custom_access: '\Drupal\mz_mobile_page\Controller\DefaultController::apiJsonAccess'
+
+mz_mobile_page.api_upload_image:
+  path: '/api/v1/uploader'
+  defaults:
+    _controller: '\Drupal\mz_mobile_page\Controller\DefaultController::uploader'
+    _format: json
+  methods: POST
+  requirements:
+    _permission: 'access content'

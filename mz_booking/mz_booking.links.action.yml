@@ -1,0 +1,7 @@
+mz_booking.add_car:
+  route_name: 'entity.node.canonical'
+  title: 'Add new car'
+  route_parameters:
+    node_type: 'car'
+  appears_on:
+    - view.cars_list.page_1

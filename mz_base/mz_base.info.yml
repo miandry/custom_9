@@ -1,0 +1,5 @@
+name: 'mz_base'
+type: module
+description: 'Mizara cms base module'
+core_version_requirement: ^8 || ^9
+package: 'Custom'

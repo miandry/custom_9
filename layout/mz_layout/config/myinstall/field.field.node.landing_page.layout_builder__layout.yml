@@ -1,0 +1,23 @@
+uuid: 97f2c68e-6d34-4d38-a392-d1cf28dafa9c
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.storage.node.layout_builder__layout
+    - node.type.landing_page
+  module:
+    - layout_builder
+_core:
+  default_config_hash: zzIMABk5Tso1uxB1icU9c9QWw20QK_Ui2CXPpNNiemg
+id: node.landing_page.layout_builder__layout
+field_name: layout_builder__layout
+entity_type: node
+bundle: landing_page
+label: Affichage
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: layout_section

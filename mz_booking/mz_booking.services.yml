@@ -1,0 +1,4 @@
+services:
+  mz_booking.manager:
+    class: Drupal\mz_booking\BookingService
+    arguments: []

@@ -1,0 +1,19 @@
+uuid: 36f807ea-ebd0-4536-b3ae-05b60a796024
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+template: booking_moderation_published
+label: booking_moderation_published
+description: 'Booking is completed by Administrator'
+text:
+  -
+    value: "<p>Booking is completed by Administrator&nbsp;&nbsp; [node:author].&nbsp; &nbsp;&nbsp; [node:field_dates:end_value]</p>\r\n"
+    format: basic_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

@@ -1,0 +1,14 @@
+uuid: 9c5cc5da-a49e-468e-a85c-b71c2e5fb7ff
+langcode: en
+status: true
+dependencies: {  }
+template: delete_node
+label: delete_node
+description: 'Delete message for node content'
+text: {  }
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

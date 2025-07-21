@@ -1,0 +1,7 @@
+uuid: 6a541cd0-c829-4eac-bc71-cc70ebdb618d
+langcode: en
+status: true
+dependencies: {  }
+id: eduction
+label: Eduction
+weight: -6

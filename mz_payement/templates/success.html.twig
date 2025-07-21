@@ -1,0 +1,175 @@
+
+
+{% set inc_ = include_template("include-success-booking") %}
+{% if (inc_["status"]) %}
+      {{inc_}}
+{% else %}
+
+{% set n = node_parser(items.booking_new)%}
+
+{% set uid = n.field_client.uid %}
+{% set u = user_parser(uid)%}
+	<div class="container container-resp">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="container--header">
+					&nbsp;
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-resp container container--right std--useradmin container--user user--profile--rectf user--container--table user--profile--rectf user--container--table--resp">
+		<div class="row mb-2">
+
+			<div class="col-lg-12 user--info" id="user-info">
+
+				<div class="row useradmin--sidebar-left g-0  overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative affiche--dashboard">
+					<div class="col p-4 d-flex flex-column position-static border rounded content--affiche--dashboard">
+						<div class="container--spends">
+							<div class="content--spend--affiche--dashboard">
+								<h2>Thank you for placing your order with us</h2>
+								<p>Will get it back to you via your email , soon </p>
+							</div>
+						</div>
+					</div>
+					<img class="img--affiche--dashboard" src="/themes/custom/staydirect/img/affiche-dashboarod.png">
+				</div>
+
+				<div class="row useradmin--sidebar-left g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+					<div class="col p-4 d-flex flex-column position-static content--right">
+						<div class="container--spends">
+							<div class="content--spend">
+								<p>
+									Email :
+									{{u.mail}}
+								</p>
+							</div>
+							{% if u.field_first_name %}
+								<div class="content--spend">
+									<p>
+										Fisrt name :
+										{{u.field_first_name}}
+									</p>
+								</div>
+							{% endif %}
+							{% if u.field_last_name %}
+								<div class="content--spend">
+									<p>
+										Last name :
+										{{u.field_last_name}}
+									</p>
+								</div>
+							{% endif %}
+							{% if u.field_phone %}
+								<div class="content--spend">
+									<p>
+										Phone number :
+										{{u.field_phone}}
+									</p>
+								</div>
+							{% endif %}
+							<div>
+								<br/>
+								<p>
+									<a href="/user/{{u.uid}}/invoice?id={{n.nid}}" class="btn-grey">
+										Download invoice
+									</a>
+								</p>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="row g-0 border rounded overflow-hiddenn flex-md-row mb-4 shadow-sm h-md-250 position-relative history--product" id="history-product">
+					<div class="col p-4 d-flex flex-column position-static mySwiper content--table--history--booking" style="overflow-x: scroll !important;">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Site </th>
+									<th scope="col">Period</th>
+                                    <th scope="col">created on
+									</th>
+									<th scope="col">Expired on
+									</th>
+									<th scope="col">Price</th>
+									<th scope="col">State</th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+							<tbody>
+			
+									{% set site = node_parser(n.field_item['#object']) %}
+									<tr>
+										<th scope="row">{{n.nid}}</th>
+										<td>{{ site.label_site}} 
+                                        ( <a href={{ site.field_st_domain_name}}>view site
+												</a> )</td>
+                                        <td>	{{n.months}} </td>
+                                        <td>	
+                                        	{% set dates = n.field_dates|first %}
+                                            {% if dates.value %}
+											{{ dates.value}}
+                                            {% else %}
+                                               - 
+                                            {% endif %}
+                                        </td>
+										<td>
+											{% set dates = n.field_dates|first %}
+                                            {% if dates.value %}
+											{{ dates.end_value}}
+                                            {% else %}
+                                               - 
+                                            {% endif %}
+										</td>
+										<td>
+											$
+											{{n.field_price_with_tax}} ({{n.moderation_state}})
+										</td>
+										<td>
+											{% if n.moderation_state == "validate" %}
+												<span class="badge badge-paid">Booking Confirmed</span>
+											{% endif %}
+
+											{% if n.moderation_state == "draft" %}
+												<span class="badge badge-pending">Booking request validation</span>
+											{% endif %}
+											{% if n.moderation_state == "init" %}
+												<span class="badge badge-inpaid">wait for payment</span>
+											{% endif %}
+											{% if n.moderation_state == "published" %}
+												<span class="badge badge-inpaid">Archived</span>
+											{% endif %}
+										</td>
+										<td>
+                                        <a class="dropdown-item" href="{{base_url}}/invoice?id={{n.nid}}">Get Invoice</a>
+											{# <div class="dropdown">
+												<div class="dropdown">
+													<button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+														Actions
+													</button>
+													<ul class="dropdown-menu">
+														<li>
+															<a class="dropdown-item" href="{{base_url}}/invoice?id=1">Download Invoice</a>
+														</li>
+													</ul>
+												</div>
+                                              </div>   #}
+											</td>
+										</td>
+									</tr>
+							
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+

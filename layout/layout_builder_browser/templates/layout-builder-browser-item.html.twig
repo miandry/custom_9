@@ -1,0 +1,13 @@
+<div class="lb-card">
+  {% if image %}
+  <div class="lb-image">
+  <a class='lb-view' href="javascript:void(0)" data-title="{{label}}" data-src="{{image.full}}" >  
+     <img src="{{image.uri}}" style="width:100%"  />
+  </a>
+  </div>
+  {% endif %}  
+  <div class="lb-container-actions">
+      <div class="float-left-action"><b>{{link}}</b></div>
+      <div class="float-right-action"> {{label}}  </div>
+  </div>
+</div>

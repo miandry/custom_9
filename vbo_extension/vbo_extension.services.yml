@@ -1,0 +1,4 @@
+services:
+  vbo_extension.manager:
+    class: Drupal\vbo_extension\ExportService
+    arguments: []

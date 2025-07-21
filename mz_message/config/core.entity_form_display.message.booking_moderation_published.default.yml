@@ -1,0 +1,40 @@
+uuid: 5ce638b2-ad50-4bbd-aaca-c4d2aea4865e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.booking_moderation_published.email
+    - field.field.message.booking_moderation_published.reference
+    - field.field.message.booking_moderation_published.send_owner
+    - message.template.booking_moderation_published
+id: message.booking_moderation_published.default
+targetEntityType: message
+bundle: booking_moderation_published
+mode: default
+content:
+  email:
+    type: email_default
+    weight: 1
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  reference:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  send_owner:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden: {  }

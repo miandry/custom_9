@@ -1,0 +1,3 @@
+manage message mobile:
+  title: 'manage message mobile'
+  restrict access: false

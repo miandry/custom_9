@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Contains html_page.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+use Drupal\Core\Form\FormStateInterface;
+/**
+ * Implements hook_help().
+ */
+function html_page_help($route_name, RouteMatchInterface $route_match)
+{
+    switch ($route_name) {
+        // Main module help for the html_page module.
+        case 'help.page.html_page':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' . t('Build HTML Page') . '</p>';
+            return $output;
+        default:
+    }
+}
+function html_page_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    if($form_id == "html_page_form"){
+
+    }
+}
+/**
+ * Implements hook__suggestions_HOOK_alter().
+ */
+function html_page_theme_suggestions_html_alter(array &$suggestions, array $variables) {
+    if(isset($variables['html']['#type']) && $variables['html']['#type'] == "html" && 
+       $node = \Drupal::routeMatch()->getParameter('node')){
+        if( $node->bundle() == 'html_page'){
+            $alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+            $suggestions[] = 'htmlpage__' .str_replace('/', '__', $alias);
+        }
+      
+
+     }
+     return $suggestions;
+}
+
+
+
+
+function html_page_preprocess_html(&$variables)
+{
+
+    $node = \Drupal::request()->attributes->get('node');
+    if ($node && $node->field_html->value && $node->field_json->value) {
+       $body = $node->field_html->value;
+        $var =  Json::decode($node->field_json->value);
+        $var['entity'] = $node ;
+        $variables['html_page'] = [
+            '#type' => 'inline_template',
+            '#template' => $body,
+            '#context' => $var
+        ];
+      
+    }
+
+    // echo "hello go"; die();
+    // if (isset($variables['node']) && $variables['node']->getType() == 'html_page') {
+    //   $view_mode = $variables['view_mode'];
+    //   if($view_mode=='full') {
+    //     $node = ($variables['node']);
+    //     $body = $node->body->value ;
+    //     $variables['html_page'] = [
+    //       '#type' => 'inline_template',
+    //       '#template' => $body
+    //     ];
+    //    // $variables['html_page'] = \Drupal::service('renderer')->render($body);
+    //   }
+    // }
+}

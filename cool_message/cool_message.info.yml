@@ -1,0 +1,11 @@
+type: module
+name: 'Cool Message'
+description: 'Cool notification messages.'
+package: 'User interface'
+core: '8.x'
+core_version_requirement: ^8 || ^9
+
+# Information added by Drupal.org packaging script on 2021-09-23
+version: '3.0.0'
+project: 'cool_message'
+datestamp: 1632415900

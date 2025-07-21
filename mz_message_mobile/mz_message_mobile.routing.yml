@@ -1,0 +1,6 @@
+mz_message_mobile.page:
+  path: '/page/mobile/verification'
+  defaults:
+    _controller: '\Drupal\mz_message_mobile\Controller\MobileController::page_validation'
+  requirements:
+    _permission: 'access content'

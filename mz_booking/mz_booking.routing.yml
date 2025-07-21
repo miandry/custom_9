@@ -1,0 +1,36 @@
+mz_booking.upload_price:
+   path: '/admin/upload/price'
+   defaults:
+     _form: '\Drupal\mz_booking\Form\UploadPrice'
+     _title: 'Master price Uploader'
+   requirements:
+     _permission: 'upload master price'
+mz_booking.tax_us:
+   path: '/admin/reminder'
+   defaults:
+     _form: '\Drupal\mz_booking\Form\ReminderEmail'
+     _title: 'Reminder'
+   requirements:
+     _permission: 'access content'    
+mz_booking.car:
+  path: '/car/{count}'
+  defaults:
+    _controller: '\Drupal\mz_booking\Controller\DefaultController::car'
+    _title: 'car'
+  requirements:
+    _permission: 'access content'     
+mz_booking.saveBookingTemplate:
+  path: '/saveBooking'
+  defaults:
+    _controller: '\Drupal\mz_booking\Controller\DefaultController::saveBooking'
+    _title: 'saveBooking'
+  requirements:
+    _permission: 'access content'       
+
+mz_booking.order:
+  path: '/order'
+  defaults:
+    _controller: '\Drupal\mz_booking\Controller\DefaultController::order'
+    _title: 'saveBooking'
+  requirements:
+    _permission: 'access content'  

@@ -1,0 +1,8 @@
+name: 'vbo_extension'
+type: module
+description: 'View bulk operation extension'
+package: 'Views'
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:views_bulk_operations
+  - session_based_temp_store

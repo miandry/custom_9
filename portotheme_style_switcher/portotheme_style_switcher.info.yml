@@ -1,0 +1,5 @@
+name: 'portotheme_style_switcher'
+type: module
+description: 'Portotheme style switcher'
+core_version_requirement: ^8 || ^9
+package: 'Custom'

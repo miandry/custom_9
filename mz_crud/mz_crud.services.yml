@@ -1,0 +1,15 @@
+services:
+  logger.channel.mz_crud:
+    parent: logger.channel_base
+    arguments: ['mz_crud']
+  crud:
+    class: Drupal\mz_crud\CRUDService
+    arguments: []
+  api.crud:
+    class: Drupal\mz_crud\APIService
+    arguments: []  
+  mz_crud.twig.extension:
+    class: Drupal\mz_crud\TwigExtension\DefaultTwigExtension
+    arguments: []
+    tags:
+      - { name: twig.extension }

@@ -1,0 +1,224 @@
+<?php
+
+/**
+ * @file
+ * Contains drupal_helper.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_help().
+ */
+function drupal_helper_help($route_name, RouteMatchInterface $route_match) {
+    switch ($route_name) {
+        // Main module help for the drupal_helper module.
+        case 'help.page.drupal_helper':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' . t('Usual Functions for beginner developper').'</p>';
+            $output .= '<p>' . t('For more information, visit the <a href=":url">Drupal Helper project page</a>.', [':url' => 'https://www.drupal.org/project/drupal_helper']).'</p>';
+
+      return $output;
+
+        default:
+    }
+}
+/**
+ * @file
+ * Contains mz_chat.module.
+ */
+
+function drupal_helper_form_alter(&$form, &$form_state, $form_id)  {
+
+    if ($form_id == 'user_pass') {
+      $form['actions']['submit']['#submit'][] = '_user_pass_custom_submit';
+    }
+}
+/**
+ * Custom submit handler for user profile edit form.
+ */
+function _user_pass_custom_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+    $email = $form_state->getValue('name');
+    $user = user_load_by_mail($email);
+    if ($user) {
+      $timestamp = \Drupal::time()->getRequestTime();
+      $hash = user_pass_rehash($user, $timestamp);
+
+      $one_time_login_url = Url::fromRoute('user.reset', [
+        'uid' => $user->id(),
+        'timestamp' => $timestamp,
+        'hash' => $hash,
+      ], ['absolute' => TRUE])->toString();
+   
+      $to = $user->getEmail();
+   
+      $config = \Drupal::config('user.mail');
+
+      // Retrieve the password reset email subject and body.
+      $pass_reset = $config->get('password_reset');
+      $subject = $pass_reset['subject'];
+      $body = $pass_reset['body'];
+      $context = [
+        'user' => $user,
+      ];
+      // Replace tokens in the subject and body.
+      $subject_rendered = \Drupal::token()->replace($subject, $context);
+      $body_rendered = \Drupal::token()->replace($body, $context);
+      $body_rendered = str_replace('[user:one-time-login-url]', $one_time_login_url, $body_rendered);
+
+      $is_exist = \Drupal::moduleHandler()->moduleExists("mz_email");
+      if($is_exist){
+        $status = \Drupal::service('mz_email.default')->sendMail( $to,      $subject_rendered  , $body_rendered );
+        if(!$status){
+            \Drupal::messenger()->addMessage(t('There was a problem sending your password reset email.'), 'error');
+        }else{
+            \Drupal::messenger()->addMessage(t('Password reset email sent.'));
+        }
+       }
+
+    }
+    else {
+      \Drupal::messenger()->addMessage(t('No user found with that email address.'), 'error');
+    }
+}
+/**
+ * Implements hook__suggestions_HOOK_alter().
+ */
+function drupal_helper_theme_suggestions_group_alter(array &$suggestions, array $variables) {
+    if(isset($variables['elements']['#group']) && is_object($variables['elements']['#group']->view)){
+        $view_name = ($variables['elements']['#group']->view->id());
+        $display_view = ($variables['elements']['#group']->view->getDisplay());
+        $suggestions[] = 'group__view__' . $view_name;
+        foreach ($display_view as $key => $display){
+            if($key=='display'){
+                $suggestions[] = 'group__view__' . $view_name.'__'.$display['id'];
+            }
+        }
+
+    }
+    return $suggestions;
+}
+/**
+ * Implements hook__suggestions_HOOK_alter().
+ */
+function drupal_helper_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+    if(isset($variables['elements']['#node']) && is_object($variables['elements']['#node']->view)){
+        $view_name = ($variables['elements']['#node']->view->id());
+        $display_view = ($variables['elements']['#node']->view->getDisplay());
+        $suggestions[] = 'node__view__' . $view_name;
+        foreach ($display_view as $key => $display){
+            if($key=='display'){
+                $suggestions[] = 'node__view__' . $view_name.'__'.$display['id'];
+            }
+        }
+
+    }
+    return $suggestions;
+}
+/**
+ * Implements hook__suggestions_HOOK_alter().
+ */
+function drupal_helper_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+    // Add theme suggestions to blocks based on region.
+    if(isset($variables['elements']['content']['#block_content'])) {
+        $block_object = $variables['elements']['content']['#block_content'];
+        if(is_object($block_object) && $block_object->info->getValue()){
+            $val = $block_object->info->getValue();
+            if(isset($val[0])){
+                $title = strtolower($block_object->info->getValue()[0]['value']);
+                $suggestions[] = 'block__' . $title;
+            }
+
+        }
+    }
+    return $suggestions;
+}
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ *
+ * Adds body classes if certain regions have content.
+ */
+// function drupal_helper_preprocess_html(&$variables) {
+//     $query = Drupal::request()->query->all();
+//     if(isset($query['lang']) && $query['lang']){
+//         $languageManager = \Drupal::languageManager();
+//         $customLanguageNegotiator = \Drupal::service('drupal_helper.language_negotiator');
+//         $languageManager->setNegotiator($customLanguageNegotiator);   
+//         $languageManager->reset(); 
+//         $languageManager->getNegotiator()->setLanguageCode($query['lang']);  
+//     }
+//     $variables['#attached']['library'][] = "drupal_helper/drupal_helper";
+// }
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ *
+ * Adds body classes if certain regions have content.
+ */
+function drupal_helper_preprocess_html(&$variables) {
+ // Add inline CSS directly in the header.
+ $inline_css = '<style> #link_element_git {border:1px solid;padding:10px;background-color:silver;margin-bottom: 10px;}</style>';
+
+$variables['#attached']['html_head'][] = [
+ [
+   '#tag' => 'style',
+   '#value' => $inline_css,
+ ],
+ 'custom_inline_css',
+];
+}
+  /**
+ * Implements hook_theme_suggestions_HOOK_alter() for page templates.
+ */
+function drupal_helper_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+    if ($node = \Drupal::routeMatch()->getParameter('node')) {
+      // Check if the current page is a node page.
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        // Get the content type of the node.
+        $node_type = $node->getType();
+        // Add a suggestion based on the content type.
+        $suggestions[] = 'page__node_' . $node_type;
+        $alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+        if( $alias){
+          $suggestions[] = 'page__node_'.$node_type.'_'. str_replace('/', '_', $alias);
+        }
+      }
+    }
+  }
+  /**
+ * Implements hook_theme_suggestions_HOOK_alter() for HTML.
+ */
+function drupal_helper_theme_suggestions_html_alter(array &$suggestions, array $variables) {
+    // Add a suggestion based on the path.
+    $path = \Drupal::service('path.current')->getPath();
+    $current_path = \Drupal::service('path_alias.manager')->getAliasByPath($path);
+    $suggestions[] = 'html__' . str_replace('/', '__', $current_path);
+}
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function drupal_helper_page_attachments_alter(array &$attachments) {
+  // Add inline CSS to the header.
+  $inline_css = '
+    <style>
+      body {
+        background-color: #f0f0f0;
+      }
+      .custom-header-style {
+        color: #333;
+        font-weight: bold;
+        font-size: 20px;
+      }
+    </style>
+  ';
+
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'style',
+      '#value' => $inline_css,
+    ],
+    'gitrepos_inline_css',
+  ];
+}

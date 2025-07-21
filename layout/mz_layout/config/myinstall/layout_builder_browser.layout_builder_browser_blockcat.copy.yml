@@ -1,0 +1,7 @@
+uuid: 5d09e630-1834-4d32-b956-b364d2b44d20
+langcode: en
+status: true
+dependencies: {  }
+id: copy
+label: Copy
+weight: -7

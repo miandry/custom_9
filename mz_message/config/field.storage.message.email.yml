@@ -1,0 +1,22 @@
+uuid: 8d180b59-c591-43ba-a4e4-fdad572030b8
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - message
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: message.email
+field_name: email
+entity_type: message
+type: email
+settings: {  }
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

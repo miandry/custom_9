@@ -1,0 +1,19 @@
+uuid: 11263ab7-f1c8-4589-8ca3-2bad02dc7645
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+template: insert_node
+label: insert_node
+description: 'Insert message for node content'
+text:
+  -
+    value: "<p>&nbsp;[current-user:name]&nbsp; has added a new [node:content-type] <a href=\"#\"> [node:title] </a></p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

@@ -1,0 +1,23 @@
+uuid: 062df912-ad80-41c4-85bb-354744456808
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.email
+    - message.template.booking_moderation_published
+id: message.booking_moderation_published.email
+field_name: email
+entity_type: message
+bundle: booking_moderation_published
+label: Email
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: boutamiandrilala@gmail.com
+  -
+    value: miandrilala9@yahoo.fr
+default_value_callback: ''
+settings: {  }
+field_type: email

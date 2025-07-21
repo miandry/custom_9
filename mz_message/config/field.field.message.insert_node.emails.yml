@@ -1,0 +1,21 @@
+uuid: dfed9f13-4446-48ed-8d36-072d4855f87f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.emails
+    - message.template.insert_node
+id: message.insert_node.emails
+field_name: emails
+entity_type: message
+bundle: insert_node
+label: Emails
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: miandrilala9@yahoo.fr
+default_value_callback: ''
+settings: {  }
+field_type: string_long

@@ -1,0 +1,23 @@
+uuid: ffa60dd7-e6ef-4c00-8792-d804962f9d74
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.send_owner
+    - message.template.booking_moderation_published
+id: message.booking_moderation_published.send_owner
+field_name: send_owner
+entity_type: message
+bundle: booking_moderation_published
+label: 'Send email to owner'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,5 @@
+name: 'mz_mobile_page'
+type: module
+description: 'Mobile page Integration'
+core_version_requirement: ^8.8 || ^9
+package: 'Custom'

@@ -1,0 +1,35 @@
+html_page.view:
+  path: '/html_page/{id}'
+  defaults:
+    _form: '\Drupal\html_page\Form\HtmlPageForm'
+    _title: 'View'
+  requirements:
+    _permission: 'access content'
+html_page.page:
+  path: '/html_page'
+  defaults:
+    _form: '\Drupal\html_page\Form\HtmlPageInsert'
+    _title: 'Insert New Html page'
+  requirements:
+    _permission: 'access content'
+  options:
+    _admin_route: TRUE
+html_page.edit:
+  path: '/html_page/{id}/edit'
+  defaults:
+    _form: '\Drupal\html_page\Form\HtmlPageEditor'
+    _title: 'Edit HTML Page'
+  requirements:
+    _permission: 'access content'
+  options:
+    _admin_route: TRUE    
+html_page.pages:
+  path: '/html_page_list'
+  defaults:
+    _form: '\Drupal\html_page\Form\HtmlPagesForm'
+    _title: 'Html Pages'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+    

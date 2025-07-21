@@ -1,0 +1,12 @@
+services:
+  mz_payment.manager:
+    class: Drupal\mz_payment\PaymentService
+    arguments: []
+  mz_payment.twig.extension:
+    class: Drupal\mz_payment\TwigExtension\PaymentTwigExtension
+    arguments: [ ]
+    tags:
+      - { name: twig.extension }
+  mz_payment.booking:
+    class: Drupal\mz_payment\BookingPaymentService
+    arguments: []

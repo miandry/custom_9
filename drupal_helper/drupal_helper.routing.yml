@@ -1,0 +1,53 @@
+drupal_helper.api_controller_paragraph_delete:
+  path: '/paragraph/{id}/delete'
+  defaults:
+    _controller: '\Drupal\drupal_helper\Controller\ApiController::paragraph_delete'
+    _title: 'paragraph_delete'
+  requirements:
+    _permission: 'access content'
+
+drupal_helper.api_controller_delete:
+  path: 'confirm/{entity_type}/{id}/delete'
+  defaults:
+    _controller: '\Drupal\drupal_helper\Controller\ApiController::delete'
+    _title: 'Entity delete'
+  requirements:
+    _permission: 'access content'
+drupal_helper.manual_export:
+   path: '/admin/config/manual_export'
+   defaults:
+     _form: '\Drupal\drupal_helper\Form\ConfigExportForm'
+     _title: 'Config Export List'
+   requirements:
+     _permission: 'access administration pages'
+   options:
+     _admin_route: TRUE
+drupal_helper.manual_import:
+   path: '/admin/config/manual_import'
+   defaults:
+     _form: '\Drupal\drupal_helper\Form\ConfigImportForm'
+     _title: 'Config Import List'
+   requirements:
+     _permission: 'access administration pages'
+   options:
+     _admin_route: TRUE
+
+drupal_helper.repo_git:
+   path: '/admin/gitrepos'
+   defaults:
+     _form: '\Drupal\drupal_helper\Form\GitRepoForm'
+     _title: 'Repos git'
+   requirements:
+    _permission: 'access administration pages'   
+   options:
+    _admin_route: TRUE
+
+drupal_helper.manual_git:
+   path: '/admin/git/{name}'
+   defaults:
+    _controller: '\Drupal\drupal_helper\Controller\ApiController::git_pull'
+    _title: 'Update git'
+   requirements:
+    _permission: 'access administration pages'   
+   options:
+    _admin_route: TRUE

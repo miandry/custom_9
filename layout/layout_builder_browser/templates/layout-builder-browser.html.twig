@@ -1,0 +1,19 @@
+<div>
+    <div class="tab">
+    {% for key,cat in block_categories %}
+      <button class="tablinks" onclick="openTab(event, 'tabs-{{cat.id}}')">{{cat.title}}</button>
+    {% endfor %} 
+    </div>
+   {% for key,cat in block_categories %}
+       <article class="tabcontent first-{{loop.index}}" id="tabs-{{cat.id}}">
+              <div class="lb-container">
+              {% for key_block,block in cat.links %}
+                <div class="column">
+                 {{block}} 
+                </div>
+              {% endfor %}
+              </div>
+       </article>  
+   {% endfor %} 
+</div>
+

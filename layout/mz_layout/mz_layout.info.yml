@@ -1,0 +1,7 @@
+name: 'mz_layout'
+type: module
+description: 'Layout Builder Improvement'
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - layout_discovery

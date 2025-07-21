@@ -1,0 +1,6 @@
+settings payments:
+  title: 'Allow to config Setting Payment'
+  restrict access: false
+refund payments:
+  title: 'Allow to refund Payment'
+  restrict access: false

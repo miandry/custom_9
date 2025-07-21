@@ -1,0 +1,40 @@
+uuid: d3004bfe-5499-4995-9ccf-f5295e84e2f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.reference
+    - message.template.booking_moderation_init
+    - node.type.booking
+  module:
+    - unique_field_ajax
+third_party_settings:
+  unique_field_ajax:
+    unique: 0
+    per_lang: 0
+    case_sensitive: 0
+    use_ajax: 0
+    no_enforce: 0
+    message: ''
+    message_warning: ''
+id: message.booking_moderation_init.reference
+field_name: reference
+entity_type: message
+bundle: booking_moderation_init
+label: reference
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      booking: booking
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

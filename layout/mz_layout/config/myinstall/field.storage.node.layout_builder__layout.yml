@@ -1,0 +1,21 @@
+uuid: 63dac603-a3ef-443b-80c3-104bb9984b8d
+langcode: fr
+status: true
+dependencies:
+  module:
+    - layout_builder
+    - node
+_core:
+  default_config_hash: geYDd6YMk74iF2ZQKiVVVO7tLuqpTbk41yyvVxDCNBI
+id: node.layout_builder__layout
+field_name: layout_builder__layout
+entity_type: node
+type: layout_section
+settings: {  }
+module: layout_builder
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

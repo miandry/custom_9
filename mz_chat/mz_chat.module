@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Contains mz_chat.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Render\Markup;
+/**
+ * Implements hook_help().
+ */
+function mz_chat_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the mz_chat module.
+    case 'help.page.mz_chat':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Chat Integration') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+/**
+ * Implements hook_page_bottom().
+ */
+function mz_chat_page_bottom(array &$page_bottom) {
+  $config = \Drupal::config("chat.integration");
+  if($config && $config->get('status') == 1){
+    $current_theme =\Drupal::service('theme.manager')->getActiveTheme();
+    $config_theme = \Drupal::config('system.theme');    
+    $default_theme = $config_theme->get('default');
+    $theme_name = $current_theme->getName();
+    if( $theme_name == $default_theme){
+      if($config && $config->get('source')){
+        $page_bottom['mz_chat'] = [
+          '#markup' => Markup::create($config->get('source')),
+          '#cache' => [
+            'max-age' => 120300,
+          ]
+        ];
+        $renderer = \Drupal::service('renderer');
+        $renderer->addCacheableDependency($page_bottom['mz_chat'], $config );
+      }
+    } 
+  }
+ 
+}

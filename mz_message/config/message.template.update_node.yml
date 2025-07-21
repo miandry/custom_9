@@ -1,0 +1,19 @@
+uuid: 37ed19cc-2d6b-40b6-9b42-57e8c484ce77
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+template: update_node
+label: update_node
+description: ''
+text:
+  -
+    value: "<p>update_node</p>\r\n\r\n<p>&nbsp;[node:nid]&nbsp;[node:title]</p>\r\n"
+    format: basic_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

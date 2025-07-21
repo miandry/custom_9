@@ -1,0 +1,243 @@
+<?php
+
+/**
+ * @file
+ * Contains mz_chat.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
+use Drupal\user\UserInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
+use Drupal\Core\Datetime\DrupalDateTime; 
+/**
+ * Implements hook_help().
+ */
+function mz_booking_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the mz_chat module.
+    case 'help.page.mz_booking':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Booking Integration') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+function mz_booking_preprocess_user(&$variables){
+    if($variables['elements']["#view_mode"] == "full"){
+      $variables['#cache']['max-age'] = 0;
+    }
+}
+function mz_booking_preprocess_node(&$variables){
+  $node = $variables['elements']["#node"];
+  if($variables["view_mode"] == "full" && is_object($node) 
+  && $node->bundle() == "car"){
+    $service = \Drupal::service('mz_booking.manager');
+    $variables['#cache']['max-age'] = 0;
+    $variables['addons'] = $service->getAddons($node);
+    $variables['priceDefault'] = $service->getPriceDefault($node);
+    $variables['priceList'] = $service->getPriceList($node);
+
+    $variables['#attached']['drupalSettings']['priceDefault']= $variables['priceDefault'];
+    $variables['#attached']['drupalSettings']['priceList']= $variables['priceList'];
+    $variables['#attached']['drupalSettings']['bookedDates']= $service->getBookedDates($node);
+  }
+  if($variables["view_mode"] == "full" 
+  && is_object($node) && $node->bundle() == "article"){
+    global $site_variables ;
+    if(isset($site_variables['site_id'])){
+      $service = \Drupal::service('mz_booking.manager');
+      $variables['#cache']['max-age'] = 0;
+      $variables['addons'] = $service->getAddons($node);
+      $variables['priceDefault'] = $service->getPriceDefault($node);
+      $variables['priceList'] = $service->getPriceList($node);
+    
+      $variables['#attached']['drupalSettings']['priceDefault']= $variables['priceDefault'];
+      $variables['#attached']['drupalSettings']['priceList']= $variables['priceList'];
+      $variables['#attached']['drupalSettings']['bookedDates']= $service->getBookedDates($node);
+    }
+  }
+
+}
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function mz_booking_preprocess_block(&$variables) {
+  if(isset($variables['content']) && isset($variables['content']['#block_content'])){
+
+    $service_booking = \Drupal::service('mz_booking.manager');
+    $variables['#cache']['max-age'] = 0;
+  //  kint($variables);
+    $blockobject = $variables['content']['#block_content'];
+    $service_helper = \Drupal::service('drupal.helper');
+    $params = $service_helper->helper->get_parameter();
+    // template website 
+    if($variables['derivative_plugin_id']=='booking_process'){
+      if(isset($params["termService"]) && $params["termService"] == "on" ){
+        if (\Drupal::currentUser()->isAnonymous()) {
+          $email = $params["mail"];
+          $uid = $service_booking->asGuestProcess($email);
+        } else {
+          $uid = \Drupal::currentUser()->id();
+        }
+        $variables['booking_new'] =  $service_booking->bookingProcessTemplate($uid);
+      }
+    }
+    if(is_object($blockobject) && $blockobject->bundle() =='check_availaibility'){
+       $service = \Drupal::service('mz_booking.manager');
+       $variables['#cache']['max-age'] = 0;
+       $helper = \Drupal::service('drupal.helper')->node;
+       $nodeId = $helper->getLatestNodeId('article');
+       $node = \Drupal::entityTypeManager()
+       ->getStorage('node')->load($nodeId);
+       $variables['addons'] = $service->getAddons($node);
+       $variables['priceDefault'] = $service->getPriceDefault($node);
+       $variables['priceList'] = $service->getPriceList($node);
+       $variables['#attached']['drupalSettings']['priceDefault']= $variables['priceDefault'];
+       $variables['#attached']['drupalSettings']['priceList']= $variables['priceList'];
+       $variables['#attached']['drupalSettings']['bookedDates']= $service->getBookedDates($node);
+    }
+    if(is_object($blockobject) && $blockobject->bundle() =='bloc_payement'){
+      // if(isset($params_site["site_id"])){
+      //   if (!\Drupal::currentUser()->isAuthenticated()) {
+      //     $url = "/login?destination=pay?site_id=".$params_site["site_id"] ;
+      //     $response = new RedirectResponse($url);
+      //     $response->send();
+      //     exit;
+      //   }
+      // }else{
+      //   $url = "/user";
+      //   $response = new RedirectResponse($url);
+      //   $response->send();
+      //   exit;
+      // }
+  
+    }
+  }
+}
+
+
+
+function __tmp_registration_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  // set relative internal path
+  $redirect_path = "/user";
+  $url = url::fromUserInput($redirect_path);
+  // set redirect
+  $form_state->setRedirectUrl($url);
+}
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function mz_booking_query_moderation_state_tag_alter(Drupal\Core\Database\Query\AlterableInterface $query) {
+  $moderation_state = ['draft','validate'];
+  $query->addJoin('LEFT', 'content_moderation_state_field_revision', 'md', 'md.content_entity_revision_id = base_table.vid AND md.langcode = base_table.langcode');
+  $query->condition('md.moderation_state',   $moderation_state , 'IN');
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function mz_booking_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if($form['#form_id'] == 'user_register_form'){
+  // Add CUSTOM SUBMIT HANDLER FOR REGISTRATION
+    $form['actions']['submit']['#submit'][] = '__tmp_registration_submit';
+  }
+
+  if ($form['#form_id'] === 'node_booking_edit_form') {
+    $form['actions']['submit']['#attributes'] = ['class' => ['hidden']];
+    $form['actions']['delete']['#attributes'] = ['class' => ['hidden']];
+    $form['title']['widget'][0]['value']['#attributes'] = ['readonly' => 'readonly'];
+    //$form['title']['#attributes'] =  ['class' => ['hidden']];
+    unset($form['revision']); //['#attributes'] = ['class' => ['hidden']];
+    unset($form['revision_information']);
+    unset($form['revision_log']);   
+    unset($form['meta']['#group']);
+    unset($form['meta']['#group']);
+
+  }
+
+
+}
+
+
+
+
+function mz_booking_node_update(\Drupal\node\NodeInterface $entity) {
+
+  if($entity->bundle() == 'car'){
+
+      $car = \Drupal::service('entity_parser.manager')->node_parser($entity);
+      if($car['update_prices'] && $car['update_prices'] == 1){
+        $service_booking = \Drupal::service('mz_booking.manager');
+        $service_booking->executePricesUpdate($car['nid']);
+    
+      }
+    //  $file_id = ($car['price_lists']['document']['target_id']);
+    //  $service_booking = \Drupal::service('mz_booking.manager');
+    //  $service_booking->setPriceByExcel( $file_id ,$car['nid']);
+    //  die();
+  }
+}
+
+function mz_booking_node_presave(\Drupal\node\NodeInterface $entity) {
+
+  if($entity->moderation_state && $entity->bundle() == 'booking'){
+    $cuurent_state = ($entity->moderation_state->value);
+    $cuurent_old = ($entity->original && $entity->original->moderation_state)?($entity->original->moderation_state->value) : '';
+    $status_message = ($cuurent_old ." to ".$cuurent_state);
+    $username = '';
+    $uid = $entity->getOwnerId();
+    $user = \Drupal\user\Entity\User::load($uid);
+    if (!is_null($user)) {
+      $username = $user->getDisplayName();
+    }
+    $userCurrent = \Drupal::currentUser();
+    // init
+    if($status_message == "init to draft"){
+      
+    }
+    //validation
+    if($status_message == "draft to validate"){
+      $service_booking = \Drupal::service('mz_booking.manager');
+      $service = \Drupal::service('drupal.helper');
+      $status =  $service->helper->is_field_ready($entity, 'months');
+      if($status){
+        $month = $entity->months->value ;
+        $start_date_obj = new DrupalDateTime();
+        $start_date = $start_date_obj->format('Y-m-d');
+        $end_date =  $service_booking->calculateEndDate( $start_date, $month);
+        $entity->field_dates = [
+          'value' =>  $start_date,
+          'end_value' =>  $end_date
+        ];
+      }  
+      //subscription staydirect
+      $status1 =  $service->helper->is_field_ready($entity, 'field_date');   
+      if($status1){
+        $start_date_obj = new DrupalDateTime();
+        $start_date = $start_date_obj->format('Y-m-d');
+        $entity->field_date =  $start_date ;
+      }
+    }
+
+    //refund ok
+    if($status_message=="validate to published"){
+     
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function mz_booking_cron(){
+     $service_booking = \Drupal::service('mz_booking.manager');
+     $service_booking->bookingDeleteDraft() ;
+     $service_booking->reminderEmail();
+}

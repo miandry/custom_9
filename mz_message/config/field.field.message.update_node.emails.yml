@@ -1,0 +1,19 @@
+uuid: 78610853-0557-41f4-a011-46ca72488236
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.emails
+    - message.template.update_node
+id: message.update_node.emails
+field_name: emails
+entity_type: message
+bundle: update_node
+label: Emails
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

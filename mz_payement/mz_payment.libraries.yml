@@ -1,0 +1,28 @@
+mz_payment:
+  version: VERSION
+  js:
+    js/mz_payment.js : {}
+  css:
+    component:
+      css/mz_payment.css: { }
+  dependencies:
+     - core/jquery
+     - core/drupalSettings
+stripe:
+  version: v3
+  header: true
+  js:
+    https://js.stripe.com/v3/: { type: external, minified: true }
+
+jquery-confirm:
+  version: v3
+  css:
+    /libraries/jquery-confirm/dist/jquery-confirm.css: {}
+  js:
+    /libraries/jquery-confirm/dist/jquery-confirm.js: {}
+
+mz_payment_refund: 
+  version: v3
+  header: true
+  js:
+    js/refund.js : {}

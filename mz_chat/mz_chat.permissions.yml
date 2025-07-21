@@ -1,0 +1,3 @@
+manage chat:
+  title: 'manage chat'
+  restrict access: false

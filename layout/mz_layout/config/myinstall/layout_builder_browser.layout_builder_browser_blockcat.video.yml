@@ -1,0 +1,7 @@
+uuid: c212edd0-d8b7-4622-a0e4-8402ee79b8c9
+langcode: en
+status: true
+dependencies: {  }
+id: video
+label: Video
+weight: 5

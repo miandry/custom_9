@@ -1,0 +1,7 @@
+uuid: 5bd9fa6b-02ff-445c-802a-923b823dec4f
+langcode: en
+status: true
+dependencies: {  }
+id: service
+label: 'Service widget'
+weight: 0

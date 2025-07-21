@@ -1,0 +1,8 @@
+
+portotheme_style_switcher.controller:
+  path: '/style-switcher'
+  defaults:
+    _controller: '\Drupal\portotheme_style_switcher\Controller\PortoThemeController::index'
+    _title: 'PortoTheme Style Switcher'
+  requirements:
+    _permission: 'access manage content'

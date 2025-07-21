@@ -1,0 +1,7 @@
+uuid: fd69610b-2441-454b-bc8a-b5a6c4f5052a
+langcode: en
+status: true
+dependencies: {  }
+id: gallery
+label: 'Gallery Image'
+weight: -4

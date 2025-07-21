@@ -1,0 +1,4 @@
+vbo_extension:
+  css:
+    component:
+      css/preview_export.css: { }

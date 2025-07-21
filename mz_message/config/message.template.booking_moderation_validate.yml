@@ -1,0 +1,19 @@
+uuid: 50bdba0f-8f88-4f6f-9adf-e5853a529e82
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+template: booking_moderation_validate
+label: booking_moderation_validate
+description: 'Booking is validated by Manager'
+text:
+  -
+    value: "<p>Booking is validated by Manager</p>\r\n"
+    format: basic_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

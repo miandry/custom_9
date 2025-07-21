@@ -1,0 +1,7 @@
+html_page.view_menu:
+  title: 'HTML  Page'
+  route_name: html_page.pages
+  description: 'h'
+  parent: system.admin_config_development
+  weight: 99
+

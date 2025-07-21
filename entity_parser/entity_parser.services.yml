@@ -1,0 +1,8 @@
+services:
+  entity_parser.twig.extension:
+    class: Drupal\entity_parser\TwigExtension\DefaultTwigExtension
+    arguments: ['@renderer']
+    tags:
+      - { name: twig.extension }
+  entity_parser.manager:
+    class: Drupal\entity_parser\EntityParser

@@ -1,0 +1,8 @@
+
+vbo_extension.export:
+  path: '/vbo/export'
+  defaults:
+    _controller: '\Drupal\vbo_extension\Controller\ExportController::export'
+    _title: 'Export CVS'
+  requirements:
+    _permission: 'access content'

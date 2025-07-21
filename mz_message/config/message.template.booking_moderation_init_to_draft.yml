@@ -1,0 +1,19 @@
+uuid: 22c6105e-b189-49f5-8d22-c4c2950371fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+template: booking_moderation_init_to_draft
+label: booking_moderation_init_to_draft
+description: 'Booking submit by user waiting for validation'
+text:
+  -
+    value: "<p>Booking submit by user waiting for validation</p>\r\n"
+    format: basic_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

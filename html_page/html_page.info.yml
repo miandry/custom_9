@@ -1,0 +1,7 @@
+name: 'html_page'
+type: module
+description: 'Build HTML Page'
+core_version_requirement: ^8.8 || ^9
+package: 'Default'
+dependencies:
+  - ace_editor

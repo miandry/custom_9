@@ -1,0 +1,21 @@
+uuid: d5716c90-bd57-4a14-a338-76f694032540
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.emails
+    - message.template.booking_moderation_init_to_draft
+id: message.booking_moderation_init_to_draft.emails
+field_name: emails
+entity_type: message
+bundle: booking_moderation_init_to_draft
+label: Emails
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: miandrilala9@yahoo.fr
+default_value_callback: ''
+settings: {  }
+field_type: string_long

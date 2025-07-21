@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @file
+ * Contains mz_chart.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\Entity\User;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+/**
+ * Implements hook_help().
+ */
+function mz_base_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the mz_chart module.
+    case 'help.page.mz_base':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('My Awesome Module') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+//function mz_base_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+//    if ($context['widget'] instanceof \Drupal\text\Plugin\Field\FieldWidget\TextareaWidget
+//        || $context['widget'] instanceof \Drupal\text\Plugin\Field\FieldWidget\TextfieldWidget
+//        || $context['widget'] instanceof \Drupal\text\Plugin\Field\FieldWidget\StringTextfieldWidget
+//    ) {
+//
+//        $element['#after_build'][] = '_allowed_formats_remove_textarea_help';
+//    }
+//}
+//
+//function _allowed_formats_remove_textarea_help($form_element, FormStateInterface $form_state) {
+//    if (isset($form_element['format'])) {
+//
+//        // All this stuff is needed to hide the help text.
+//        unset($form_element['format']['guidelines']);
+//        unset($form_element['format']['help']);
+//        unset($form_element['format']['#type']);
+//        unset($form_element['format']['#theme_wrappers']);
+//       // $form_element['format']['format']['#access'] = FALSE;
+//    }
+//
+//    return $form_element;
+//}
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function startsWith( $haystack, $needle ) {
+  $length = strlen( $needle );
+  return substr( $haystack, 0, $length ) === $needle;
+}
+
+
+function custom_mails($form, \Drupal\Core\Form\FormStateInterface $form_state){
+    $values = $form_state->getValues();
+    $to = \Drupal::config('system.site')->get('mail');
+    $subject = $values['subject'][0]['value'];
+
+    $message = "<b> Contact From : ".$values['name']."</b>";
+    $message .= "<p>".$values['message'][0]['value']."</p>";
+
+    $header = "From:".$values['mail']." \r\n";
+//    if($values['copy'] && $values['copy']==1){
+//        $header .= "Cc:".$values['mail']." \r\n";
+//    }
+    $header .= "MIME-Version: 1.0\r\n";
+    $header .= "Content-type: text/html\r\n";
+    $retval = mail ($to,$subject,$message,$header);
+    if( $retval == true ) {
+        $message = "Message sent successfully...";
+        \Drupal::messenger()->addMessage($message);
+    }else {
+        $message =  "Message could not be sent...";
+        \Drupal::messenger()->addMessage($message,'error');
+    }
+}
+/**
+ * Implements hook_toolbar_alter().
+ */
+function mz_base_toolbar_alter(&$items) {
+ /// kint($items['administration']);die();
+}
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function mz_base_preprocess_menu(&$variables) {
+  $user = \Drupal::currentUser();
+  $roles = $user->getRoles();
+  if(!in_array('administrator', $roles)) {  
+         
+        if ( isset($variables["items"]["system.admin_structure"])
+         && $user->hasPermission('hidden menu structure')) {
+          unset($variables["items"]["system.admin_structure"]);
+        }
+        if (isset($variables["items"]["system.admin_config"]) &&
+        $user->hasPermission('hidden menu configuration')) {
+            unset($variables["items"]["system.admin_config"]);
+          
+        }
+        if (isset($variables["items"]["system.admin_content"]) 
+        && $user->hasPermission('hidden menu content')) {
+           unset($variables["items"]["system.admin_content"]);
+        }
+  }
+}

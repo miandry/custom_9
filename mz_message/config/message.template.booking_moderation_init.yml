@@ -1,0 +1,19 @@
+uuid: 49e09687-8824-429d-9804-0a353d5fd6b6
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+template: booking_moderation_init
+label: booking_moderation_init
+description: 'Booking started ( on click button  booking request )'
+text:
+  -
+    value: "<p>booking_moderation_init</p>\r\n"
+    format: basic_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

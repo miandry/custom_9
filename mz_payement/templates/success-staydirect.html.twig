@@ -1,0 +1,740 @@
+
+
+{% set inc_ = include_template("include-success-staydirect") %}
+{% if (inc_["status"]) %}
+      {{inc_}}
+{% else %}
+
+{% set n = node_parser(items.booking_site)%}
+
+{% set uid = n.field_client.uid %}
+{% set u = user_parser(uid)%}
+<style>
+/*========= respo.css header =======*/
+    
+@media screen and (max-width: 499.96px){ 
+  .container-resp {
+      min-width: 320px   !important;
+      padding-left: 20px  !important;
+      padding-right:20px  !important;
+      margin: auto  !important;
+  }
+  .none-mob {
+      display: none !important;
+  }
+}
+@media (min-width: 499.98px) {
+  .container-resp {
+      max-width: 500px  !important;
+      width: 100%   !important;
+      padding-left: 20px   !important;
+      padding-right: 20px   !important;
+      margin: auto  !important;
+  }
+  .none-mob {
+      display: none !important;
+  }
+}
+@media (min-width: 539.98px) {
+  .container-resp {
+      max-width: 500px  !important;
+      width: 100%   !important;
+      padding-left: 0px   !important;
+      padding-right: 0px   !important;
+      margin: auto  !important;
+  }
+  .none-tab {
+      display: none !important;
+  }
+}
+@media (min-width: 767.98px) {
+  .container-resp {
+      max-width: 768px  !important;
+      width: 100%   !important;
+      padding-left: 40px   !important;
+      padding-right: 40px   !important;
+      margin: auto  !important;
+  }
+  .none-tab {
+      display: none !important;
+  }
+  .none-desk {
+      display: block !important;
+  }
+}
+@media (min-width: 847.98px) {
+  .container-resp {
+      max-width: 769px  !important;
+      width: 100%   !important;
+      padding-left: 40px   !important;
+      padding-right: 40px   !important;
+      margin: auto  !important;
+  }
+  .none-tab {
+      display: block !important;
+  }
+  .none-mob {
+      display: block !important;
+  }
+  .none-desk {
+      display: none !important;
+  }
+}
+@media (min-width: 991.98px) {
+  .container-resp {
+      max-width: 992px  !important;
+      width: 100%   !important;
+      padding-left: 60px   !important;
+      padding-right: 60px   !important;
+      margin: auto  !important;
+  }
+  .none-desk {
+      display: none !important;
+  }
+}
+@media (min-width: 1111.98px) {
+  .container-resp {
+      max-width: 992px   !important;
+      width: 100%   !important;
+      padding-left: 0px   !important;
+      padding-right: 0px   !important;
+      margin: auto  !important;
+  }
+  .none-desk {
+      display: none !important;
+  }
+}
+@media (min-width: 1199.98px) {
+  .container-resp {
+      max-width: 1200px   !important;
+      width: 100%   !important;
+      padding-left: 60px   !important;
+      padding-right: 60px   !important;
+      margin: auto  !important;
+  }
+  .none-desk {
+      display: none !important;
+  }
+}
+@media (min-width: 1359.98px) {
+  .container-resp {
+      max-width: 1200px   !important;
+      width: 100%   !important;
+      padding-left: 0   !important;
+      padding-right: 0   !important;
+      height: auto  !important;
+      margin: auto  !important;
+  }
+  .none-desk {
+      display: none !important;
+  }
+}
+/* ============= end respo.css header ================  */
+
+.container--header {
+  padding-top:30px;
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom:30px;
+}
+.container--header h1 {
+
+}
+.container--header h1 a {
+  color: var(--bleumarine-color) !important;
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  font-size: 30px !important;
+}
+
+.container--profile {
+  padding-right: 50px;
+  padding-bottom: 50px;
+}
+.container--profile .content--profile {
+  width: 100%;
+  background: #F1F0F0;
+  background-position: center center;
+  width: 152px;
+  height: 152px;
+  margin: auto;
+  border-radius: 50%;
+  margin-top: 29px;
+  margin-bottom: 30px;
+  padding:10px;
+}
+.content--profile {
+  position: relative;
+}
+.content--profile .arrow {
+  position: absolute;
+  top: -21px;
+  left: -31px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+.content--profile .btn--add {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-image: linear-gradient(#ff8a00, #e52e71);
+  position: absolute;
+  top: 101px;
+  right: -38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.details--content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.details--content p {
+  margin-bottom:  0;
+  display: inline-block;
+  font-weight: bold;
+} 
+.details--content span {
+  display: block;
+}
+.details--content span a {
+  color: #666;
+}
+.details--profile {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 95px;
+  margin: auto;
+}
+.container--spends {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+.content--spend {
+  background: #F6F8FA;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.content--spend p {
+  margin-bottom: 0;
+  padding: 10px 5px
+}
+.std--useradmin .useradmin--sidebar-left img {
+  width: 35px;
+  display: none !important;
+}
+
+.container--works {
+  display: flex;
+  flex-direction: row;
+  margin-top: 25px;
+}
+.content--work{
+  text-align: center;
+}
+
+.mySwiper span {
+  display: block;
+  font-weight: bold;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.content--right {
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
+}
+
+.std--useradmin {
+  margin-top: 75px;
+}
+
+.std--useradmin .useradmin--sidebar-right img {
+  display: inline-block !important;
+}
+.std--useradmin a {
+  text-decoration: none !important;
+}
+.std--useradmin .logo {
+  width: 250px;
+  height: auto; 
+  max-height: 115px; 
+  margin-top: 0 !important;
+}
+
+@media (min-width: 991.98px) {
+  .container--profile {
+      padding-right: 0px;
+      padding-bottom: 50px;
+  }
+  .container--profile .content--profile {
+      width: 115px;
+      height: 115px;
+      border-radius: 50%;
+      margin-top: 29px;
+      margin-bottom: 30px;
+      overflow: hidden;
+  }
+}
+
+@media (min-width: 1199.98px) {
+  .container--profile {
+      padding-right: 50px;
+      padding-bottom: 50px;
+  }
+  .container--profile .content--profile {
+      width: 100%;
+      width: 152px;
+      height: 152px;
+      border-radius: 50%;
+      margin-top: 29px;
+      margin-bottom: 30px;
+  }
+}
+.container--user label[for="input-file"] {
+  display: block;
+  width: 100%;
+  background: #e3362c;
+  color: #fff;
+  padding: 12px;
+  margin: 10px auto;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  opacity: 0 !important;
+}
+.container--user input[id="input-file"] {
+  display: none !important;
+}
+
+.user--profile--rectf {
+margin-bottom: 67px;
+}
+.user--container--table .affiche--dashboard {
+  color: #fff !important;
+  font-family: "Vastine";
+  position: relative;
+  height: 270px; 
+  position: relative; 
+  margin-top: -33px;
+}
+.user--container--table .user--info .affiche--dashboard h2 {
+  font-size: 30px !important;
+  font-weight: 400;
+  text-align: left !important;
+  background: none !important;
+  color: #fff !important;
+}
+.user--container--table .user--info .affiche--dashboard p {
+  color: #fff !important;
+  font-size: 18px;
+}
+.user--container--table .user--info .affiche--dashboard .content--spend--affiche--dashboard img{
+  position: absolute;
+  width: 35%;
+  right: 0;
+  bottom: 0;
+  display: block !important;
+}
+.user--container--table .user--info {
+  position: relative;
+}
+.user--container--table .user--info .img--affiche--dashboard {
+  position: absolute;
+  right: 0;
+  /* height: 270px; */
+  bottom: -5px;
+  display: block !important;
+  width: 213px;
+  z-index: 2;
+  right: 50px;
+}
+.user--container--table .user--info .content--affiche--dashboard {
+  height: 235px; 
+  background: linear-gradient(137.52deg, rgba(98, 146, 158, 0.8) -15.04%, #62929E 104.44%); 
+  width: 100% !important; 
+  position: absolute !important;
+  width: 100%; 
+  bottom: 0; 
+  left: 0;
+  right: 0; 
+  z-index: 1;
+}
+
+.user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+  overflow-x: scroll !important;
+  overflow-y: hidden !important;
+}
+@media screen and (max-width: 499.96px){ 
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -5px;
+      display: none !important;
+      width: 213px;
+      right: 50px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 26px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 18px;
+  }
+   .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: scroll !important;
+      overflow-y: hidden !important;
+  }
+}
+@media (min-width: 499.98px) {
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -5px;
+      display: none !important;
+      width: 213px;
+      right: 50px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 30px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 15px !important;
+  }
+   .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: scroll !important;
+      overflow-y: hidden !important;
+  }
+}
+@media (min-width: 539.98px) {
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -5px;
+      display: none !important;
+      width: 213px;
+      right: 50px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 30px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 18px !important;
+  }
+   .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: scroll !important;
+      overflow-y: hidden !important;
+  }
+}
+@media (min-width: 767.98px) {
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -5px;
+      display: block !important;
+      width: 213px;
+      right: 50px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 30px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 18px !important;
+  }
+   .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+  }
+}
+@media (min-width: 847.98px) {
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -5px;
+      display: block !important;
+      width: 213px;
+      right: 50px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 30px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 18px !important;
+  }
+   .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+  }
+}
+@media (min-width: 991.98px) {
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -5px;
+      display: block !important;
+      width: 213px;
+      right: 31px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 30px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 16px !important;
+  }
+   .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+  }
+}
+@media (min-width: 1111.98px) {
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -100px;
+      display: block !important;
+      width: 282px;
+      right: 30px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 30px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 17px !important;
+  }
+   .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+  }
+}
+@media (min-width: 1199.98px) {
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -151px;
+      display: block !important;
+      width: 330px;
+      right: 25px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 30px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 18px !important;
+  }
+   .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+  }
+}
+@media (min-width: 1359.98px) {
+  .user--container--table .user--info .img--affiche--dashboard {
+      bottom: -115px;
+      display: block !important;
+      width: 293px;
+      right: 50px;
+  }
+  .user--container--table .user--info .affiche--dashboard h2 {
+      font-size: 30px !important;
+  }
+  .user--container--table .user--info .affiche--dashboard p {
+      font-size: 18px !important;
+  }
+  .user--container--table .user--info .history--product.overflow-hiddenn .content--table--history--booking {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+  }
+}
+.container--profile .content--profile {
+  overflow: hidden;
+}
+.btn-grey {
+  color: #FFF !important;
+  font-family: "Kanit" !important;
+  font-size: 20px !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  line-height: 150% !important;
+  border-radius: 10px !important;
+  background: var(--Dgrad-bleu, linear-gradient(138deg, rgba(98, 146, 158, 0.80) -15.04%, #62929E 104.44%)) !important;
+  border: none !important;
+  padding: 10px 30px !important;
+}
+.badge {
+  display: inline-block;
+  font-weight: 700;
+  border-radius: 0.375rem;
+  text-align: center;
+  padding: 0.35em 0.65em;
+  white-space: nowrap;
+  color: #fff;
+  text-align: center;
+
+}
+
+.badge-inpaid {
+  background: #d2322d;
+}
+.badge-pending {
+  background: #ffc107;
+}
+.badge-paid {
+  background: #28a745;
+}
+.badge-published,.badge-cancel {
+  background: #949191;
+}
+.user--container--table .dropdown-menu {
+  width: 90% !important;
+  border-radius: 0 !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  position: absolute;
+  transform: translate3d(0px, 35px, 0px);
+  top: 5px !important;
+  left: -64px !important;
+  will-change: transform;
+  font-size: 13px !important;
+}
+.user--container--table .btn {
+  padding: 5px14px5px15px !important;
+  width: 90% !important;
+
+}
+.btn-login{
+    float:right;
+    background: white !important;
+    color: #62929E !important;
+    border: 2px solid #62929E !important;
+    
+}
+</style>
+	<div class="container container-resp">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="container--header">
+					&nbsp;
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-resp container container--right std--useradmin container--user user--profile--rectf user--container--table user--profile--rectf user--container--table--resp">
+		<div class="row mb-2">
+
+			<div class="col-lg-12 user--info" id="user-info">
+
+				<div class="row useradmin--sidebar-left g-0 overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative affiche--dashboard">
+					<div class="col p-4 d-flex flex-column position-static border rounded content--affiche--dashboard">
+						<div class="container--spends">
+							<div class="content--spend--affiche--dashboard">
+								<h4>Thank you for your payment! </h4>
+								<p> Your transaction has been successfully processed. <strong>Please check your email for next steps.</strong></p>
+							</div>
+						</div>
+					</div>
+                    <img class="img--affiche--dashboard" src="/themes/custom/staydirect/img/affiche-dashboarod.png">
+			
+				</div>
+
+				<div class="row useradmin--sidebar-left g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+					<div class="col p-4 d-flex flex-column position-static content--right">
+						<div class="container--spends">
+							<div class="content--spend">
+								<p>
+									Email :
+									{{u.mail}}
+								</p>
+							</div>
+							{% if u.field_first_name %}
+								<div class="content--spend">
+									<p>
+										Fisrt name :
+										{{u.field_first_name}}
+									</p>
+								</div>
+							{% endif %}
+							{% if u.field_last_name %}
+								<div class="content--spend">
+									<p>
+										Last name :
+										{{u.field_last_name}}
+									</p>
+								</div>
+							{% endif %}
+							{% if u.field_phone %}
+								<div class="content--spend">
+									<p>
+										Phone number :
+										{{u.field_phone}}
+									</p>
+								</div>
+							{% endif %}
+							<div>
+								<br/>
+								<p>
+									<a href="/invoice?id={{n.nid}}" class="btn-grey">
+										Download invoice
+									</a>
+                                    <a href="/user/login" class="btn-login btn-grey">
+										My account
+									</a>
+								</p>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="row g-0 border rounded overflow-hiddenn flex-md-row mb-4 shadow-sm h-md-250 position-relative history--product" id="history-product">
+					<div class="col p-4 d-flex flex-column position-static mySwiper content--table--history--booking" style="overflow-x: scroll !important;">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Site </th>
+									<th scope="col">Date</th>
+									<th scope="col">Price</th>
+									<th scope="col">State</th>
+								</tr>
+							</thead>
+							<tbody>
+			
+									{% set site = node_parser(n.field_item['#object']) %}
+									<tr>
+										<th scope="row">{{n.nid}}</th>
+										<td>{{ site.label_site}} 
+                                  ( <a href={{ site.field_st_domain_name}}>Visit your website
+												</a> )</td>
+
+                      <td> {{n.created|date("Y-m-d")}} </td>
+										<td>
+											$ {{n.field_price_with_tax}} 
+										</td>
+										<td>
+											{% if n.moderation_state == "validate" %}
+												<span class="badge badge-paid">Booking Confirmed</span>
+											{% endif %}
+
+											{% if n.moderation_state == "draft" %}
+												<span class="badge badge-pending">Booking request validation</span>
+											{% endif %}
+											{% if n.moderation_state == "init" %}
+												<span class="badge badge-inpaid">wait for payment</span>
+											{% endif %}
+											{% if n.moderation_state == "published" %}
+												<span class="badge badge-inpaid">Archived</span>
+											{% endif %}
+										</td>
+									</tr>
+							
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+{% endif %}
+

@@ -1,0 +1,344 @@
+<?php
+
+/**
+ * @file
+ * Contains mz_crud.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
+/**
+* Implements hook_help().
+ */
+function mz_payment_help($route_name, RouteMatchInterface $route_match) {
+    switch ($route_name) {
+        // Main module help for the mz_crud module.
+        case 'help.page.mz_payment':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' .  t( 'Payment strip integration') . '</p>';
+            return $output;
+
+        default:
+    }
+}
+function mz_payment_preprocess_node(&$variables){
+  $node = $variables['elements']["#node"];
+  if($variables["view_mode"] == "full" && is_object($node) && $node->bundle() == "car"){
+//    $service = \Drupal::service('mz_payment.manager');
+//    $carts = [
+//      ['price'=>1200,'quantity'=>2,'title'=>'Product 1'],
+//      ['price'=>3200,'quantity'=>1,'title'=>'Product 2']
+//    ];
+//    $service->payment($carts);
+  }
+
+}
+function mz_payment_preprocess_block(&$variables) {
+  if(isset($variables['content']) && isset($variables['content']['#block_content'])
+    &&$variables['derivative_plugin_id']=='bloc_payement'){
+      $service = \Drupal::service('mz_payment.manager');
+    $params = $service->getRequest();
+
+   // $service->paymentRefund('ch_3MdapyHnIu6grMqm1IR15H0V',100);
+    if(isset($params['amount'])){
+      $variables['params'] = $params  ;
+      $variables['#attached']['drupalSettings']['apiKey']= $service->getApiKey();
+    }
+    if(isset($params['stripeToken'])){
+    $status = $service->paymentHold($params);
+    if($status){
+      $service_booking = \Drupal::service('mz_payment.booking');
+      $service_booking->saveBookingPayement($status,$params);
+    }
+    unset($_POST);
+
+    }
+  }
+}
+
+
+/**
+ * Implements hook_entity_operation().
+ */
+
+//function mz_payment_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
+//  $operations = [];
+//
+//  // Only add an operation for node entities.
+//  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'booking') {
+//    return $operations;
+//  }
+//
+//  $operations['validation'] = [
+//    'title' => t('Confirm Booking'),
+//    'weight' => '100',
+//    'url' => \Drupal\Core\Url::fromRoute('<front>', ['node' => $entity->id()])
+//  ];
+//  //Url::fromRoute('quick_node_clone.node.quick_clone', ['node' => $entity->id()]),
+//  return $operations;
+//}
+
+function mz_payment_node_delete(\Drupal\node\Entity\Node $entity) {
+  if($entity->moderation_state && $entity->bundle() == 'booking'){
+    $charge_id = $entity->label();
+    $service = \Drupal::service('mz_payment.manager');
+    $status = $service->paymentCancel($charge_id);
+  }
+}
+function mz_payment_node_update(\Drupal\node\Entity\Node $entity) {
+  if($entity->moderation_state && $entity->bundle() == 'booking'){
+    $cuurent_state = ($entity->moderation_state->value);
+    $cuurent_old = ($entity->original->moderation_state->value);
+    $status_message = ($cuurent_old ." to ".$cuurent_state);
+
+    //validation
+    if($status_message == "draft to validate" && $entity->field_item){
+         // template
+         if($entity->field_addons && $entity->field_dates){
+          //  die("saSDASDASD");
+         } else {
+            $site = $entity->field_item->entity ;
+            $user_onwer = $site->uid->entity ;
+            $site_name = $site->site_name->value ;    
+            $service_base = \Drupal::service( 'site_manager.base' ) ;   
+            $new_email = $user_onwer->getEmail();
+            $username = $user_onwer->getAccountName();
+            $service_base->updateUserEmailByUsername($site_name,$username,$new_email);
+            $current_url = Url::fromRoute('<current>', [], ['absolute' => TRUE])->toString();
+            $url = $site->field_st_domain_name->value ;
+            $full_url = $url."/parent-action?pay_validation=confirmed&status=confirmed&parent=".$current_url;
+            $response = new RedirectResponse($full_url, 302);
+            $response->send();
+            return;  
+         }
+      }
+
+    //rollback
+    if($status_message=="published to draft"){
+
+    }
+  }
+}
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function mz_payment_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+    // Check if the form is a node delete form.
+    if ($form_id == 'user_admin_settings') {
+      // Add custom validation callback to the delete form.
+       $mail_config = Drupal::config('user.mail');
+       $form['email_new_website'] = [
+        '#type' => 'details',
+        '#title' => t('Email new webiste '),
+        '#description' => t('Edit the email messages sent to users who request a new password.') ,
+        '#group' => 'email',
+        '#weight' => 10,
+      ];
+      $form['email_new_website']['email_new_website_subject'] = [
+        '#type' => 'textfield',
+        '#title' => t('Subject'),
+        '#default_value' => $mail_config->get('email_new_website.subject'),
+        '#maxlength' => 180,
+      ];
+      $form['email_new_website']['email_new_website_body'] = [
+        '#type' => 'textarea',
+        '#title' => t('Body'),
+        '#default_value' => $mail_config->get('email_new_website.body'),
+        '#rows' => 12,
+      ];
+
+      $form['email_refund'] = [
+        '#type' => 'details',
+        '#title' => t('Email Refund '),
+        '#description' => t('Edit the email messages sent to owner refunded.') ,
+        '#group' => 'email',
+        '#weight' => 10,
+      ];
+      $form['email_refund']['email_refund_subject'] = [
+        '#type' => 'textfield',
+        '#title' => t('Subject'),
+        '#default_value' => $mail_config->get('email_refund.subject'),
+        '#maxlength' => 180,
+      ];
+      $form['email_refund']['email_refund_body'] = [
+        '#type' => 'textarea',
+        '#title' => t('Body'),
+        '#default_value' => $mail_config->get('email_refund.body'),
+        '#rows' => 12,
+      ];
+
+      $form['email_unsubscribe'] = [
+        '#type' => 'details',
+        '#title' => t('Email unsubscribe '),
+        '#description' => t('Edit the email messages sent to owner unsubscribe.') ,
+        '#group' => 'email',
+        '#weight' => 10,
+      ];
+      $form['email_unsubscribe']['email_unsubscribe_subject'] = [
+        '#type' => 'textfield',
+        '#title' => t('Subject'),
+        '#default_value' => $mail_config->get('email_unsubscribe.subject'),
+        '#maxlength' => 180,
+      ];
+      $form['email_unsubscribe']['email_unsubscribe_body'] = [
+        '#type' => 'textarea',
+        '#title' => t('Body'),
+        '#default_value' => $mail_config->get('email_unsubscribe.body'),
+        '#rows' => 12,
+      ];
+      $form['#submit'][] = '__email_new_website_user_admin_account_form_submit';
+    }
+  
+  if($form['#form_id'] == 'node_mz_payment_edit_form'){
+    unset($form['actions']);
+  }
+  
+  if ($form['#form_id'] === 'node_booking_edit_form') {
+    $node = $form_state->getFormObject()->getEntity();
+    $cuurent_state = ($node->moderation_state->value);
+    if($cuurent_state == 'draft'){
+      array_unshift($form['#validate'], '_mz_payment_draft_form_submit');
+    }
+
+    if($cuurent_state == 'validate'){
+      unset($form['actions']['submit']['#submit']);
+      $form['actions']['submit']['#submit'][] = '_mz_payment_form_submit';
+    }
+
+    // for template only
+    if($node->hasField('refund_reference')){
+      $form['#validate'][] = '_form_validation_payement_validate';
+    }
+    
+
+
+  }
+}
+function _mz_payment_draft_form_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $entity = $form_state->getFormObject()->getEntity();
+  $site = $entity->field_item->entity ;
+  $site->set('status',1);
+  $site->save();
+}
+ 
+function _form_validation_payement_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+        $node = $form_state->getFormObject()->getEntity();
+        $cuurent_state = ($node->moderation_state->value);
+        $triggering_element = $form_state->getTriggeringElement();
+        /// template on validate process
+        if($triggering_element["#moderation_state"] == "validate" && $cuurent_state == 'draft' && $node->field_payment_intent_id 
+        && $node->field_payment_intent_id->value){
+
+          $payment_intent = $node->field_payment_intent_id->value ;
+          $service = \Drupal::service('mz_payment.manager');
+          $result = $service->paymenValidateCheckout($payment_intent);
+          $status = $result['status'];
+          if($status == 'succeeded'){
+            $username = '';
+            $uid = $node->getOwnerId();
+            $user = \Drupal\user\Entity\User::load($uid);
+            if (!is_null($user)) {
+              $username = 'of '.$user->getDisplayName().',';
+            }
+            $userCurrent = \Drupal::currentUser();
+            $message = 'Booking '.$node->id().' '.$username.' was validated by '.$userCurrent->getAccountName();
+
+            \Drupal::logger("mz_payment")->warning( $message );
+            \Drupal::messenger()->addMessage(  $message );          
+          } else {
+            $form_state->setErrorByName('title', t('Failed to process payment validation in stripe'));
+          }
+        }
+}
+function _mz_payment_form_submit(array $form, \Drupal\Core\Form\FormStateInterface $form_state){
+
+      $node = $form_state->getFormObject()->getEntity();
+      $nid = $node->id();
+      $path = '/admin/payment/refund?nid='. $nid.'&destination=/node' . '/' . $nid . '/edit';
+      $response = new RedirectResponse($path, 302);
+      $response->send();
+}
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
+
+function mz_payment_node_presave(\Drupal\node\NodeInterface $entity) {
+  if($entity->moderation_state && $entity->bundle() == 'booking'){
+    $cuurent_state = ($entity->moderation_state->value);
+    $cuurent_old = ($entity->original && $entity->original->moderation_state)?($entity->original->moderation_state->value) : '';
+    $status_message = ($cuurent_old ." to ".$cuurent_state);
+    $username = '';
+    $uid = $entity->getOwnerId();
+    $user = \Drupal\user\Entity\User::load($uid);
+    if (!is_null($user)) {
+      $username = $user->getDisplayName();
+    }
+    $userCurrent = \Drupal::currentUser();
+    
+    $message = "Init booking" ;
+    if($status_message == "draft to draft"){
+      $message = $username.' request booking ' ;     
+    }
+    //validation
+    if($status_message == "draft to validate"){
+      $message = 'Booking of '.$username.' was validated by '.$userCurrent->getAccountName();
+    }
+    if($status_message == "draft to canceled_booking"){
+      //$message = 'Booking of '.$username.' was canceled by '.$userCurrent->getAccountName();
+      //$service = \Drupal::service('mz_payment.manager');
+      //$service->refundPaymentSendEmail($entity);    
+    }
+    //refund ok
+    if($status_message=="validate to published"){
+      $message = 'Booking of '.$username.' was closed by '.$userCurrent->getAccountName();
+    }
+    $entity->setRevisionLogMessage($message);
+  }
+}
+/**
+ * Implements hook_theme().
+ */
+function mz_payment_theme($existing, $type, $theme, $path) {
+  return [
+    'success' => [
+      'variables' => [
+        'items' => [],
+      ],
+    ],
+    'success_staydirect' => [
+      'variables' => [
+        'items' => [],
+      ],
+    ],
+    'parent_action' => [
+      'variables' => [
+        'items' => [],
+      ],
+    ],
+    'setup_bank_page' => [
+      'variables' => [
+        'items' => [],
+      ],
+    ]
+
+    
+  ];
+}
+
+/**
+ * Custom submit handler for user account settings form.
+ */
+function __email_new_website_user_admin_account_form_submit($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  \Drupal::configFactory()->getEditable('user.mail')
+    ->set('email_new_website.subject', $form_state->getValue('email_new_website_subject'))
+    ->set('email_new_website.body', $form_state->getValue('email_new_website_body'))
+
+    ->set('email_refund.subject', $form_state->getValue('email_refund_subject'))
+    ->set('email_refund.body', $form_state->getValue('email_refund_body'))
+
+    ->set('email_unsubscribe.subject', $form_state->getValue('email_unsubscribe_subject'))
+    ->set('email_unsubscribe.body', $form_state->getValue('email_unsubscribe_body'))
+
+    ->save();
+}

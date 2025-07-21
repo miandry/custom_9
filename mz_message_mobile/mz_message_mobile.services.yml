@@ -1,0 +1,4 @@
+services:
+  mz_message_mobile.mobile:
+    class: Drupal\mz_message_mobile\MessageMobile
+    arguments: []  

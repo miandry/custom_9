@@ -1,0 +1,19 @@
+uuid: cf6bdfec-b0cc-4aa8-8dba-ecef9894f618
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+template: booking_notification_date
+label: booking_notification_date
+description: 'send message 1 days before car renting'
+text:
+  -
+    value: "<p>booking_notification_date</p>\r\n"
+    format: basic_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

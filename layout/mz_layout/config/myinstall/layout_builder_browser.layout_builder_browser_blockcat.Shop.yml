@@ -1,0 +1,7 @@
+uuid: 9bdd68e6-5301-4ae3-8137-e712df9a0c42
+langcode: en
+status: true
+dependencies: {  }
+id: Shop
+label: Shop
+weight: 1

@@ -1,0 +1,17 @@
+drupal_helper:
+  version: VERSION
+  js:
+    js/drupal_helper.js : {}
+  dependencies:
+     - core/jquery
+     - core/drupalSettings
+     - drupal_helper/jquery_confirm
+jquery_confirm:
+    version: 2.2
+    js:
+       js/lib/jquery-confirm/jquery-confirm.min.js : {}
+    css:
+      component:
+       js/lib/jquery-confirm/jquery-confirm.min.css : {}
+    dependencies:
+     - core/jquery
