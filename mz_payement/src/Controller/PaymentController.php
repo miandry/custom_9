@@ -80,7 +80,7 @@ class PaymentController extends ControllerBase {
         $service = \Drupal::service('mz_payment.manager');
         $service->paymenSingleStayDirect();
     }
-    $path_root = '/failed';
+    $path_root = '/stripe/failed';
     $path = $path_root.'?action=failed';
     $response = new RedirectResponse($path, 302);
     $response->send();
@@ -186,20 +186,33 @@ class PaymentController extends ControllerBase {
 
   }
   public function failed() {
-    
+
     $service_helper = \Drupal::service('drupal.helper');
     $params = $service_helper->helper->get_parameter();
  
+    $config = \Drupal::config('stripe.settings');
+    $apikeySecret = $config->get('apikey.' . $config->get('environment') . '.secret');
+    \Stripe\Stripe::setApiKey($apikeySecret);
+  
+  
+  $session_id =  $params["session_id"];
+  
+  $session = \Stripe\Checkout\Session::retrieve($session_id);
+  // The session contains a PaymentIntent if mode=payment
+  if($session->status = "open" && $session->payment_status =="unpaid"){
+    $path_root = '/pay?site_id='.$params["site_id"];
+    $path = $path_root.'&action=return';
+
+  }else{
     $uid = \Drupal::currentUser()->id();
     $path_root = '/user'.'/'.$uid;
-    $path = $path_root.'?action=failed';
-      
-    $response = new RedirectResponse($path, 302);
-    $response->send();
-    return;
-    
-    
+    $path = $path_root.'?action=failed';    
   }
+  $response = new RedirectResponse($path, 302);
+  $response->send();
+  return;
+     
+}
   public function parent_action(){
       drupal_flush_all_caches();
       return [

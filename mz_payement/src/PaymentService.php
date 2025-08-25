@@ -155,14 +155,12 @@ class PaymentService {
     $config = \Drupal::config('mz_payement.stripe');
     $connectedAccountId = $config->get('account');
     $host = \Drupal::request()->getSchemeAndHttpHost();
-
     if(!isset($cart['interval'])){
       $cart['interval'] = "month";
     }
-
     try {
-        $url_success =  $host."/stripe/success?booking_site=". $booking_id."&" ;
-        $url_cancel =   $host."/stripe/failed?booking_site=". $booking_id."&" ;
+        $url_success =  $host."/stripe/success?site_id=". $booking_id."&" ;
+        $url_cancel =   $host."/stripe/failed?site_id=". $booking_id."&" ;
         $checkout_session = \Stripe\Checkout\Session::create([
             'payment_method_types' => ['card'],
             'automatic_tax' => ['enabled' => true],       
@@ -263,13 +261,21 @@ class PaymentService {
     $service_helper = \Drupal::service('drupal.helper');
     $params_site = $service_helper->helper->get_parameter();
     $price = $params_site['price'] ;
+
+    $temp_store_factory = \Drupal::service('session_based_temp_store');
+    $uid = \Drupal::currentUser()->id();// User ID
+    $temp_store = $temp_store_factory->get($uid.'_order_booking', 106400); 
+    $temp_store->deleteAll();
+    $temp_store->set('data',$params_site);
+    
     $cart['price'] =  $price ;
     $cart['quantity'] = 1 ;
     $cart['interval'] =  $params_site['interval'] ;
     $cart['title'] =  'Order website from staydirect' ;
-    $service_booking = \Drupal::service('mz_booking.manager');
-    $id = $service_booking->bookingProcessStayDirect($params_site );
-    if($id){   
+    $id = $params_site["site_id_ready"];
+    // $service_booking = \Drupal::service('mz_booking.manager');
+    // $id = $service_booking->bookingProcessStayDirect($params_site );
+   // if($id){   
         //$connectedAccountId = 'acct_1Oo6PT2SzvmOUTDI';
         $config = \Drupal::config('mz_payement.stripe');
         $connectedAccountId = $config->get('account');
@@ -277,7 +283,7 @@ class PaymentService {
           $service_helper->helper->redirectTo('/account-not-ready');
         }
        $this->subscriptionPayment($connectedAccountId,$cart,$id);
-    } 
+   // } 
     return false;
   }
   public function getSubscriptionIdFromSession($sessionId){

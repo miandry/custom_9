@@ -536,12 +536,12 @@ public function bookingProcessStayDirectFinaliser(){
     //   return false ;
     // }
 
-       $uid = $site["uid"]["uid"];
-       $random = time() . rand(10*45, 100*98);
-       $fields['title'] = $random ;
+    $uid = $site["uid"]["uid"];
+    $random = time() . rand(10*45, 100*98);
+    $fields['title'] = $random ;
      //  $fields['nid'] = $nid ;
-       $fields['field_price_default'] = $booking_info['price'] ;
-       $fields['field_item'] =     $booking_info['site_id_ready'] ;
+    $fields['field_price_default'] = $booking_info['price'] ;
+    $fields['field_item'] =     $booking_info['site_id_ready'] ;
 
       //  $start_date_obj = new DrupalDateTime();
       //  $start_date = $start_date_obj->format('Y-m-d');
@@ -556,15 +556,12 @@ public function bookingProcessStayDirectFinaliser(){
        }
        $fields['field_client'] =  $uid ;
        $fields['interval'] =   $booking_info['interval'];
-
-     
+       
+       
        //$fields['body']  = $addons_elements['table'];
        
        $booking_new = \Drupal::service('crud')->save('node', 'booking', $fields);
-       if(is_object($booking_new)){   
-
-   
-           
+       if(is_object($booking_new)){         
          $custom =  $site["uid"]["user"];
          if(isset($booking_info["field_first_name"])){
            $custom->field_first_name->value = $booking_info["field_first_name"];
@@ -578,7 +575,6 @@ public function bookingProcessStayDirectFinaliser(){
        }
        return false;
   }
-
   public function getPriceList($node){
     $dates = [];
     if(!is_object($node)){
@@ -758,13 +754,10 @@ public function bookingProcessStayDirectFinaliser(){
     $dates = array();
     $current = strtotime($first);
     $last = strtotime($last);
-
     while( $current <= $last ) {
-
       $dates[date($output_format, $current)] = date($output_format, $current);
       $current = strtotime($step, $current);
     }
-
     return $dates;
   }
   function getPriceUnitAddonWithQuantity($name){
@@ -787,8 +780,6 @@ public function bookingProcessStayDirectFinaliser(){
        
     }
     return false ;
-
-    
   }
   public function notableDays($start,$end){
     //  $start = "2023-01-04";
@@ -899,7 +890,6 @@ public function bookingProcessStayDirectFinaliser(){
         $response->send();
         return;
   }
-
   public  function formatEmailRemind($entity,$body,$subject){
     $service = \Drupal::service('mz_payment.manager');
     $token_service = \Drupal::token();
@@ -918,7 +908,6 @@ public function bookingProcessStayDirectFinaliser(){
     $to  = $item_user->getEmail();
     \Drupal::service('mz_message.default')->send_mail_simple($body,$to,$subject);
   }
-
   public function reminderEmail(){
             $remind = \Drupal::config('reminder.config');
             $reminder_set = $remind->get('reminder_set');
