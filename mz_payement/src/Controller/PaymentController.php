@@ -155,7 +155,7 @@ class PaymentController extends ControllerBase {
        /// after payement stripe got to template to change status
        if(!isset($params["pay_action"])){
           $service_booking = \Drupal::service('mz_booking.manager');
-          $status = $service_booking->bookingProcessStayDirectFinaliser();
+          $booking_id = $service_booking->bookingProcessStayDirectFinaliser();
           $parser =  \Drupal::service('entity_parser.manager') ;
           $site = \Drupal::entityTypeManager()->getStorage('node')->load($params["site_id"]);
           $url = $site->field_st_domain_name->value ;
@@ -167,7 +167,7 @@ class PaymentController extends ControllerBase {
           }
           global $base_url ; 
           $string_para = $string_para."&parent=".$base_url  ;
-          $path =    $url."/parent-action?pay_action=submit_payed&status=in_process&".$string_para;
+          $path =    $url."/parent-action?booking_site=".$booking_id."&pay_action=submit_payed&status=in_process&".$string_para;
           $response = new RedirectResponse($path, 302);
           $response->send();
           return;
