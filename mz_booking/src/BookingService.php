@@ -460,21 +460,51 @@ $taxRates = json_decode($response, true);
     return $end_date;
 }
 public function bookingProcessStayDirectFinaliser(){
-    $service = \Drupal::service('drupal.helper');
-   
+    
+  
+        $service = \Drupal::service('drupal.helper');
         $params = $service->helper->get_parameter();
-        $mz_payment_service = \Drupal::service('mz_payment.manager');
-        $info_stripe = $mz_payment_service->getSesssion($params['session_id']);
-        $entity = \Drupal::entityTypeManager()->getStorage('node')->load($params["booking_site"]);  
-        $entity->title->value = 'bk-'.$params["booking_site"] ;
-        $entity->field_session_id->value = $params['session_id'];
+        $temp_store_factory = \Drupal::service('session_based_temp_store');
+        $uid = \Drupal::currentUser()->id();// User ID
+        $temp_store = $temp_store_factory->get($uid.'_order_booking', 106400); 
+        $booking_info = $temp_store->get('data');
 
-        $subscriptionId = $mz_payment_service->getSubscriptionIdFromSession($params['session_id']);
-        $entity->field_subscription_id->value =   $subscriptionId ;
-        $entity->moderation_state->value = "draft" ;
-        $entity->field_price_with_tax->value = floatval($info_stripe["total"])/100 ;
-        return $entity->save();
-}
+        $fields['field_price_default'] = $booking_info['price'] ;
+        $fields['field_item'] =     $booking_info['site_id_ready'] ;
+    
+           if(isset($booking_info['notes'])){
+              $fields["notes"] = $booking_info['notes'];
+           }
+           $fields['field_client'] =  $uid ;
+           $fields['interval'] =   $booking_info['interval'];
+    
+           $mz_payment_service = \Drupal::service('mz_payment.manager');
+           $info_stripe = $mz_payment_service->getSesssion($params['session_id']);
+
+           $subscriptionId = $mz_payment_service->getSubscriptionIdFromSession($params['session_id']);
+           $fields['field_subscription_id'] =   $subscriptionId ;
+           $fields['moderation_state'] = "draft" ;
+           $fields['field_price_with_tax'] = floatval($info_stripe["total"])/100 ;            
+           $fields['title'] = 'bk-site'.$subscriptionId ;
+           $fields['field_session_id'] = $params['session_id'];
+           $fields['field_status_booking'] = 'completed';
+           $booking_new = \Drupal::service('crud')->save('node', 'booking', $fields);
+    
+           if(is_object($booking_new)){    
+            $site = \Drupal::service('entity_parser.manager')->node_parser($booking_info['site_id_ready']);     
+             $custom =  $site["uid"]["user"];
+             if(isset($booking_info["field_first_name"])){
+               $custom->field_first_name->value = $booking_info["field_first_name"];
+             }
+             if(isset($booking_info["field_last_name"])){
+               $custom->field_last_name->value = $booking_info["field_last_name"];
+             }
+             $custom->field_phone->value = $booking_info["field_phone"];
+             $custom->save();
+             return $booking_new->id();
+           }
+           return false;
+  }
   // For /pay?site_id=1110 
   public function findAllBookingIdBySiteSetStatus($booking_info){
     $site_id = $booking_info['site_id_ready'] ;
@@ -522,59 +552,9 @@ public function bookingProcessStayDirectFinaliser(){
       }
   
   }
-  public function bookingProcessStayDirect( $booking_info ){
-
-    $service = \Drupal::service('drupal.helper');
-    $site = \Drupal::service('entity_parser.manager')->node_parser( $booking_info['site_id_ready']);
-
-    $this->findAllBookingIdBySiteSetStatus($booking_info);
 
 
-      
-    // if($nid == false ){
-    //   \Drupal::messenger()->addMessage('No booking found for site id:'.$booking_info['site_id_ready'],'error');
-    //   return false ;
-    // }
-
-    $uid = $site["uid"]["uid"];
-    $random = time() . rand(10*45, 100*98);
-    $fields['title'] = $random ;
-     //  $fields['nid'] = $nid ;
-    $fields['field_price_default'] = $booking_info['price'] ;
-    $fields['field_item'] =     $booking_info['site_id_ready'] ;
-
-      //  $start_date_obj = new DrupalDateTime();
-      //  $start_date = $start_date_obj->format('Y-m-d');
-      //  $end_date = $this->calculateEndDate(  $start_date, $booking_info["month"]);
-      //  $fields['dates'][] = [
-      //    'value' =>    $start_date,
-      //    'end_value' =>    $end_date 
-      //  ];
-      // $fields['months'] = $booking_info["month"];
-       if(isset($booking_info['notes'])){
-          $fields["notes"] = $booking_info['notes'];
-       }
-       $fields['field_client'] =  $uid ;
-       $fields['interval'] =   $booking_info['interval'];
-       
-       
-       //$fields['body']  = $addons_elements['table'];
-       
-       $booking_new = \Drupal::service('crud')->save('node', 'booking', $fields);
-       if(is_object($booking_new)){         
-         $custom =  $site["uid"]["user"];
-         if(isset($booking_info["field_first_name"])){
-           $custom->field_first_name->value = $booking_info["field_first_name"];
-         }
-         if(isset($booking_info["field_last_name"])){
-           $custom->field_last_name->value = $booking_info["field_last_name"];
-         }
-         $custom->field_phone->value = $booking_info["field_phone"];
-         $custom->save();
-         return $booking_new->id();
-       }
-       return false;
-  }
+ 
   public function getPriceList($node){
     $dates = [];
     if(!is_object($node)){

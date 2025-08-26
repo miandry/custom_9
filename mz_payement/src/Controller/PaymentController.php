@@ -122,12 +122,14 @@ class PaymentController extends ControllerBase {
   public function success() {
     $service_helper = \Drupal::service('drupal.helper');
     $params = $service_helper->helper->get_parameter();
-
+    $path = "/page-error" ;
     /// template site
 
-     if($params['session_id'] && $params['action'] == 'success'){
-      $service_booking = \Drupal::service('mz_booking.manager');
+     if(isset($params['action'] ) && $params['session_id'] && $params['action'] == 'success'){
+
       
+      $service_booking = \Drupal::service('mz_booking.manager');
+
       $status = $service_booking->bookingProcessTempalteFinaliser();
       if (\Drupal::currentUser()->isAnonymous()) {
           $service_booking = \Drupal::service('mz_booking.manager');
@@ -149,14 +151,13 @@ class PaymentController extends ControllerBase {
 
 
      // staydirect 
-     if(isset($params["booking_site"]) && isset($params['session_id']) && $params['?action'] == 'success'){
-
+     if(isset($params["site_id"]) && isset($params['session_id']) && $params['?action'] == 'success'){
        /// after payement stripe got to template to change status
        if(!isset($params["pay_action"])){
           $service_booking = \Drupal::service('mz_booking.manager');
           $status = $service_booking->bookingProcessStayDirectFinaliser();
           $parser =  \Drupal::service('entity_parser.manager') ;
-          $booking = $parser->node_parser($params["booking_site"]);
+          $booking = $parser->node_parser($params["site_id"]);
           $site = ($booking['field_item']["#object"]);
           $url = $site->field_st_domain_name->value ;
           $service_helper = \Drupal::service('drupal.helper');
