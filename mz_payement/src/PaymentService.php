@@ -272,7 +272,7 @@ class PaymentService {
     $cart['quantity'] = 1 ;
     $cart['interval'] =  $params_site['interval'] ;
     $cart['title'] =  'Order website from staydirect' ;
-    $id = $params_site["site_id"];
+    $id = $params_site["site_id_ready"];
     // $service_booking = \Drupal::service('mz_booking.manager');
     // $id = $service_booking->bookingProcessStayDirect($params_site );
    // if($id){   

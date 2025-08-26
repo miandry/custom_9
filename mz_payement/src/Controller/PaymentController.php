@@ -157,8 +157,7 @@ class PaymentController extends ControllerBase {
           $service_booking = \Drupal::service('mz_booking.manager');
           $status = $service_booking->bookingProcessStayDirectFinaliser();
           $parser =  \Drupal::service('entity_parser.manager') ;
-          $booking = $parser->node_parser($params["site_id"]);
-          $site = ($booking['field_item']["#object"]);
+          $site = \Drupal::entityTypeManager()->getStorage('node')->load($params["site_id"]);
           $url = $site->field_st_domain_name->value ;
           $service_helper = \Drupal::service('drupal.helper');
           $parser =  \Drupal::service('entity_parser.manager') ;

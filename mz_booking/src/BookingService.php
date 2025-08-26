@@ -487,7 +487,7 @@ public function bookingProcessStayDirectFinaliser(){
            $fields['field_price_with_tax'] = floatval($info_stripe["total"])/100 ;            
            $fields['title'] = 'bk-site'.$subscriptionId ;
            $fields['field_session_id'] = $params['session_id'];
-           $fields['field_status_booking'] = 'completed';
+           $fields['field_status_booking'] = 'process';
            $booking_new = \Drupal::service('crud')->save('node', 'booking', $fields);
     
            if(is_object($booking_new)){    
