@@ -64,7 +64,12 @@ class PaymentService {
           $subscription->cancel(); 
           return $subscription->status ;   
       } catch (\Stripe\Exception\ApiErrorException $e) {
-        \Drupal::logger("mz_payment")->error( "Error: " . $e->getMessage());
+        $message = "Error: " . $e->getMessage() ;
+        \Drupal::messenger()->addMessage($message,'error');
+        $base_url = \Drupal::request()->getSchemeAndHttpHost();
+        $url =    $base_url.'/user';
+        $response = new RedirectResponse($url);
+        $response->send();
 
       }
     return false ;  
