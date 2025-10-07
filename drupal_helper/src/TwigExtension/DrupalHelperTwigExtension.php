@@ -40,8 +40,12 @@ class DrupalHelperTwigExtension extends AbstractExtension {
       ];
   }
   public function applyImageStyle($uri, $style_name) {
+  
     if(is_string($style_name) && $uri){
-        return ImageStyle::load($style_name)->buildUrl($uri);
+        $style = ImageStyle::load($style_name);
+        if($style){
+            return $style->buildUrl($uri);
+        }
     }
     return "";
   }

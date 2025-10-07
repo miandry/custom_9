@@ -96,4 +96,16 @@ class DrupalUser {
     return substr(str_shuffle($chars),0,$length);
 
   }
+
+  public function login( $uid){
+    $account = \Drupal\user\Entity\User::load($uid);
+    user_login_finalize($account);
+    $currentUser = \Drupal::currentUser();
+    if ($currentUser->isAuthenticated() && $currentUser->id() == $uid) {
+        return true ;
+    }else{
+      $message = "login failed programmatically.";
+      \Drupal::logger('drupal_helper')->error($message);
+    }
+  }
 }
