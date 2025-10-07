@@ -43,6 +43,15 @@ mz_payment.failed:
   requirements:
     _permission: 'access content'      
 
+mz_payment.failed_template:
+  path: '/stripe/failed_template'
+  defaults:
+    _controller: '\Drupal\mz_payment\Controller\PaymentController::failed_template'
+    _title: 'Failed Payment'
+  requirements:
+    _permission: 'access content' 
+
+
 mz_payment.unSubscription:
   path: '/payment/unSubscription/{id}'
   defaults:

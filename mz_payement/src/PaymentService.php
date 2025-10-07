@@ -336,7 +336,7 @@ class PaymentService {
     $service_helper = \Drupal::service('drupal.helper');
     //$connectedAccountId = 'acct_1Oo6PT2SzvmOUTDI';
  
-    $booking_new = 2 ;
+    $booking_new = -1 ;
     $config = \Drupal::config('mz_payement.stripe');
     $connectedAccountId = $config->get('account');
     if($connectedAccountId == null || $connectedAccountId == ''){
@@ -348,7 +348,7 @@ class PaymentService {
       \Stripe\Stripe::setApiKey($apikeySecret);
       $host = \Drupal::request()->getSchemeAndHttpHost();
       $url_success =  $host."/stripe/success";
-      $url_cancel =   $host."/stripe/failed";
+      $url_cancel =   $host."/stripe/failed_template";
       // Quick test of subscription creation
       $session =  $this->stripe->checkout->sessions->create([
         'payment_method_types' => ['card'],

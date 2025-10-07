@@ -88,18 +88,24 @@ class PaymentController extends ControllerBase {
   }
   // checkout template
   public function checkout() {
-    //$service_helper = \Drupal::service('drupal.helper');
-   // $params = $service_helper->helper->get_parameter();
+    $service_helper = \Drupal::service('drupal.helper');
+    $params_site = $service_helper->helper->get_parameter();
+
     $temp_store_factory = \Drupal::service('session_based_temp_store');
     $uid = \Drupal::currentUser()->id();// User ID
     $temp_store = $temp_store_factory->get($uid.'_order_booking', 106400); 
     $params = $temp_store->get('data');
-    if($params){
+    $params_new = array_merge($params,$params_site);
+
+    $temp_store_new = $temp_store_factory->get($uid.'_order_booking', 106400); 
+    $temp_store_new->deleteAll();
+    $temp_store_new->set('data',$params_new);
+    if($params_new){
       // $parser =  \Drupal::service('entity_parser.manager') ;
       // $booking = $parser->node_parser($params["booking_new"]);
-       $price = $params['total'];
-       $config = \Drupal::config('system.site');
-       $site_name = $config->get('name');
+        $price = $params_new['total'];
+        $config = \Drupal::config('system.site');
+        $site_name = $config->get('name');
         $cart['price'] =  $price ;
         $cart['quantity'] =  1 ;
         $cart['title'] =  'Booking order from '.$site_name ;
@@ -185,6 +191,35 @@ class PaymentController extends ControllerBase {
  
 
   }
+  public function failed_template() {
+
+    $service_helper = \Drupal::service('drupal.helper');
+    $params = $service_helper->helper->get_parameter();
+    $config = \Drupal::config('stripe.settings');
+    $apikeySecret = $config->get('apikey.' . $config->get('environment') . '.secret');
+    \Stripe\Stripe::setApiKey($apikeySecret);
+    $session_id =  $params["session_id"];
+    $session = \Stripe\Checkout\Session::retrieve($session_id);
+  // The session contains a PaymentIntent if mode=payment
+  if($session->status = "open" && $session->payment_status =="unpaid"){
+    //if($params["site_id"])
+    $temp_store_factory = \Drupal::service('session_based_temp_store');
+    $uid = \Drupal::currentUser()->id();// User ID
+    $temp_store = $temp_store_factory->get($uid.'_order_booking', 106400); 
+    $params_config = $temp_store->get('data');
+    unset($params_config["termService"]);
+    $path_root = '/booking-process?'.http_build_query($params_config);
+    $path = $path_root.'&action=return';
+  }else{
+    $uid = \Drupal::currentUser()->id();
+    $path_root = '/user'.'/'.$uid;
+    $path = $path_root.'?action=failed';    
+  }
+  $response = new RedirectResponse($path, 302);
+  $response->send();
+  return;
+     
+}
   public function failed() {
 
     $service_helper = \Drupal::service('drupal.helper');
@@ -193,13 +228,11 @@ class PaymentController extends ControllerBase {
     $config = \Drupal::config('stripe.settings');
     $apikeySecret = $config->get('apikey.' . $config->get('environment') . '.secret');
     \Stripe\Stripe::setApiKey($apikeySecret);
-  
-  
   $session_id =  $params["session_id"];
-  
   $session = \Stripe\Checkout\Session::retrieve($session_id);
   // The session contains a PaymentIntent if mode=payment
   if($session->status = "open" && $session->payment_status =="unpaid"){
+   // if($params["site_id"])
     $path_root = '/pay?site_id='.$params["site_id"];
     $path = $path_root.'&action=return';
 
