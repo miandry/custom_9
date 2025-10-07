@@ -377,6 +377,7 @@ $taxRates = json_decode($response, true);
   public function bookingProcessTemplate($uid){
       $service = \Drupal::service('drupal.helper');
       $params = $service->helper->get_parameter();
+    
          // Save params to session
       $temp_store_factory = \Drupal::service('session_based_temp_store');
    
